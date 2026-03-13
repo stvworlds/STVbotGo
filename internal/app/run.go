@@ -9,6 +9,8 @@ import (
 	"STVbotGo/internal/bot"
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/logging"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func Run() error {
@@ -27,7 +29,12 @@ func Run() error {
 	if err = sess.Open(); err != nil {
 		return fmt.Errorf("open Discord connection: %w", err)
 	}
-	defer sess.Close()
+	defer func(sess *discordgo.Session) {
+		err := sess.Close()
+		if err != nil {
+
+		}
+	}(sess)
 
 	stopSignal := make(chan os.Signal, 1)
 	signal.Notify(stopSignal, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
