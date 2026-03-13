@@ -1,4 +1,4 @@
-package bot
+package commands
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 const pingCommandName = "ping"
 
-func onInteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func CommandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.Type != discordgo.InteractionApplicationCommand {
 		return
 	}

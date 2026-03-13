@@ -1,4 +1,4 @@
-package bot
+package events
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 
 const startupChannelID = "1385289387557916785"
 
-func onReady(s *discordgo.Session, _ *discordgo.Ready) {
+func OnReady(s *discordgo.Session, _ *discordgo.Ready) {
 	log.Println("Bot is now running. Press CTRL-C to exit.")
 
 	if _, err := s.ChannelMessageSend(startupChannelID, "✅ Бот увімкнувся та готовий до роботи!"); err != nil {
