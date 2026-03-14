@@ -10,7 +10,7 @@ func NewSession(token string) (*discordgo.Session, error) {
 		return nil, err
 	}
 
-	session.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
+	session.Identify.Intents = discordgo.IntentsAll
 
 	commandLoader(session)
 	eventLoader(session)

@@ -19,7 +19,7 @@ func CommandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	latency := s.HeartbeatLatency()
-	content := fmt.Sprintf("🏓 Поточний пінг бота: `%dms`", latency.Milliseconds())
+	content := fmt.Sprintf("🏓 Понг: `%dms`", latency.Milliseconds())
 
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
