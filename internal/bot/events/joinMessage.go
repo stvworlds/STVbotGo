@@ -1,7 +1,6 @@
 package events
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -10,7 +9,10 @@ import (
 const logsChannelID = "1385289387557916785"
 
 func OnMemberJoin(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
-	fmt.Println("OnMemberJoin")
+
+	if _, err := s.ChannelMessageSend(logsChannelID, m.Mention()+" приєднався до діскорду"); err != nil {
+		log.Printf("failed to send startup message: %v", err)
+	}
 
 	channel, err := s.UserChannelCreate(m.User.ID)
 	if err != nil {
