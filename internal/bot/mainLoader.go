@@ -1,6 +1,8 @@
 package bot
 
 import (
+	"log"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -12,8 +14,13 @@ func NewSession(token string) (*discordgo.Session, error) {
 
 	session.Identify.Intents = discordgo.IntentsAll
 
-	commandLoader(session)
-	eventLoader(session)
+	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		RegisterCommands(s)
+	})
 
+	commandLoader(session)
+	eventsLoader(session)
+
+	log.Println("Bot is now running. Press CTRL-C to exit.")
 	return session, nil
 }
