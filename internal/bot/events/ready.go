@@ -21,4 +21,19 @@ func OnReady(s *discordgo.Session, _ *discordgo.Ready) {
 	}); err != nil {
 		log.Printf("failed to register /ping command: %v", err)
 	}
+
+	if _, err := s.ApplicationCommandCreate(s.State.User.ID, "", &discordgo.ApplicationCommand{
+		Name:        "convert",
+		Description: "Конвертувати файл у GIF",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionAttachment,
+				Name:        "file",
+				Description: "Файл для конвертації: png, jpeg, jpg, mp4 або інший формат ffmpeg",
+				Required:    true,
+			},
+		},
+	}); err != nil {
+		log.Printf("failed to register /convert command: %v", err)
+	}
 }
