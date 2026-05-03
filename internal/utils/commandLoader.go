@@ -1,11 +1,11 @@
-package bot
+package utils
 
 import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
-import "STVbotGo/internal/bot/commands"
+import "STVbotGo/internal/handlers/commands"
 
 func commandLoader(s *discordgo.Session) {
 	s.AddHandler(commands.CommandPing)

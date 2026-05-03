@@ -1,11 +1,11 @@
-package bot
+package utils
 
 import (
 	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
-import "STVbotGo/internal/bot/events"
+import "STVbotGo/internal/handlers/events"
 
 func eventsLoader(s *discordgo.Session) {
 

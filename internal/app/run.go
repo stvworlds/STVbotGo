@@ -6,22 +6,21 @@ import (
 	"os/signal"
 	"syscall"
 
-	"STVbotGo/internal/bot"
 	"STVbotGo/internal/config"
-	"STVbotGo/internal/logging"
+	"STVbotGo/internal/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 func Run() error {
-	logging.Configure()
+	utils.Logger()
 
 	env, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("config: %w", err)
 	}
 
-	sess, err := bot.NewSession(env.Token)
+	sess, err := utils.NewSession(env.Token)
 	if err != nil {
 		return fmt.Errorf("create Discord session: %w", err)
 	}

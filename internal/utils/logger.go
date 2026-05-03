@@ -1,10 +1,10 @@
-package logging
+package utils
 
 import "log"
 
 const prefix = "STVbotGo: "
 
-func Configure() {
+func Logger() {
 	log.SetPrefix(prefix)
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 }
