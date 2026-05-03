@@ -13,8 +13,7 @@ import (
 )
 
 func Run() error {
-	utils.Logger()
-
+	config.Logger()
 	env, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("config: %w", err)
