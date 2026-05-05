@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Deploy STVbotGo
         uses: actions/checkout@v4
-      - name: Create .env file
-        run: echo "TOKEN=${{ secrets.TOKEN }}" >> .env
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -36,4 +34,4 @@ jobs:
         run: docker rm -f STVbotGo || true
 
       - name: Run Docker container
-        run: docker run -d -p 1234:1234 --name STVbotGo maksim6opka/stvbotgo:latest
+        run: docker run -d --restart unless-stopped -p 1234:1234 --name STVbotGo -e TOKEN="${{ secrets.TOKEN }}" maksim6opka/stvbotgo:latest
