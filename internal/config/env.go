@@ -34,12 +34,17 @@ func Load() (Env, error) {
 		}
 	}
 
+	fmt.Printf("Loading config from: %s\n", configPath)
+
 	env, err := loadYAML(configPath)
 	if err != nil {
 		return Env{}, err
 	}
 
 	applyEnvOverrides(&env)
+
+	fmt.Printf("Environment: %s\n", env.Environment)
+	fmt.Printf("Token length: %d\n", len(env.Token))
 
 	if env.Token == "" {
 		return Env{}, fmt.Errorf("TOKEN is empty")
