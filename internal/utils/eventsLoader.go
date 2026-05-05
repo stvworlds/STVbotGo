@@ -5,11 +5,17 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 )
-import "STVbotGo/internal/handlers/events"
 
-func eventsLoader(s *discordgo.Session) {
+import (
+	"STVbotGo/internal/config"
+	"STVbotGo/internal/handlers/events"
+)
 
-	s.AddHandler(events.OnReady)
+func eventsLoader(s *discordgo.Session, cfg config.Env) {
+
+	readyHandler := events.NewReadyHandler(cfg.StartupChannelID)
+	s.AddHandler(readyHandler.OnReady)
+
 	s.AddHandler(events.OnMemberJoin)
 	s.AddHandler(events.OnIpMessage)
 

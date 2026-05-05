@@ -3,10 +3,12 @@ package utils
 import (
 	"log"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
 
-func NewSession(token string) (*discordgo.Session, error) {
+func NewSession(token string, cfg config.Env) (*discordgo.Session, error) {
 	session, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, err
@@ -19,7 +21,7 @@ func NewSession(token string) (*discordgo.Session, error) {
 	})
 
 	commandLoader(session)
-	eventsLoader(session)
+	eventsLoader(session, cfg)
 
 	log.Println("Bot is now running. Press CTRL-C to exit.")
 	return session, nil
