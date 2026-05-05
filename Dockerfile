@@ -63,6 +63,9 @@ USER appuser
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 
+# Copy config files to the expected location
+COPY --from=build /src/configs /configs
+
 # Expose the port that the application listens on.
 EXPOSE 1234
 

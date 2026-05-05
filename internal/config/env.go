@@ -27,7 +27,11 @@ func Load() (Env, error) {
 			configName = "dev"
 		}
 
-		configPath = filepath.Join("configs", configName+".yml")
+		// Try /configs first (Docker), then local ./configs
+		configPath = filepath.Join("/configs", configName+".yml")
+		if _, err := os.Stat(configPath); os.IsNotExist(err) {
+			configPath = filepath.Join("configs", configName+".yml")
+		}
 	}
 
 	env, err := loadYAML(configPath)
