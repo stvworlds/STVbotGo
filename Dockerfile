@@ -12,9 +12,10 @@ ARG GO_VERSION=1.26.0
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 WORKDIR /src
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /go/pkg/mod/ to speed up subsequent builds.
-COPY go.mod ./
+# Copy the source code first so Go can create/update go.sum during dependency resolution.
+COPY . .
+
+# Download dependencies and allow Go to generate go.sum inside the build container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     go mod download -x
 
@@ -26,7 +27,6 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 # Leverage a bind mount to the current directory to avoid having to copy the
 # source code into the container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
-    --mount=type=bind,target=. \
     CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server ./cmd/STVbotGo
 
 ################################################################################
