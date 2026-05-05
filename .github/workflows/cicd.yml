@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Deploy STVbotGo
         uses: actions/checkout@v4
-      - name: Create .evn file
+      - name: Create .env file
         run: echo "TOKEN=${{ secrets.TOKEN }}" >> .env
       - name: Login to DockerHub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
