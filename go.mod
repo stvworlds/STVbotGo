@@ -9,8 +9,6 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.41.7 // indirect
-	github.com/aws/smithy-go v1.25.1 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
