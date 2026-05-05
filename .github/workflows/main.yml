@@ -51,4 +51,4 @@ jobs:
         run: docker rm -f STVbotGo || true
 
       - name: Run Docker container
-        run: docker run -d --restart unless-stopped -p 1234:1234 --name STVbotGo -e APP_CONFIG=main -e TOKEN=" ${{ secrets.TOKEN }}"${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        run: docker run -d --restart unless-stopped -p 1234:1234 --name STVbotGo -e APP_CONFIG=main -e TOKEN="${{ secrets.TOKEN }}"${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
