@@ -19,7 +19,7 @@ func Run() error {
 		return fmt.Errorf("config: %w", err)
 	}
 
-	sess, err := utils.NewSession(env.Token)
+	sess, err := utils.NewSession(env.Token, env)
 	if err != nil {
 		return fmt.Errorf("create Discord session: %w", err)
 	}
