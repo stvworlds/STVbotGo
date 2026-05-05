@@ -15,19 +15,14 @@ WORKDIR /src
 # Copy the source code first so Go can create/update go.sum during dependency resolution.
 COPY . .
 
-# Download dependencies and allow Go to generate go.sum inside the build container.
-RUN --mount=type=cache,target=/go/pkg/mod/ \
-    go mod download -x
+# Download dependencies and generate go.sum inside the build container.
+RUN go mod tidy
 
 # This is the architecture you're building for, which is passed in by the builder.
-# Placing it here allows the previous steps to be cached across architectures.
+ARG TARGETARCH
 
 # Build the application.
-# Leverage a cache mount to /go/pkg/mod/ to speed up subsequent builds.
-# Leverage a bind mount to the current directory to avoid having to copy the
-# source code into the container.
-RUN --mount=type=cache,target=/go/pkg/mod/ \
-    CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server ./cmd/STVbotGo
+RUN CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server ./cmd/STVbotGo
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
