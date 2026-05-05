@@ -12,7 +12,7 @@ type Env struct {
 }
 
 func Load() (Env, error) {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(); err != nil && !os.IsNotExist(err) {
 		return Env{}, fmt.Errorf("load .env: %w", err)
 	}
 
