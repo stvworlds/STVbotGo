@@ -11,7 +11,7 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/stevious-xyz/stvbotgo
-  IMAGE_TAG: latest
+  IMAGE_TAG: dev
 
 jobs:
   build:
