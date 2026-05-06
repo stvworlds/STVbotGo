@@ -1,3 +1,6 @@
 environment: dev
 
 startupChannelID: "1385289387557916785"
+
+newsChannels:
+  - "1501679320937005136"

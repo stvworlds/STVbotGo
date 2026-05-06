@@ -16,6 +16,8 @@ services:
       - .env
     ports:
       - "1234:1234"
+    volumes:
+      - ./configs:/configs:ro
 
 # The commented-out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
@@ -44,7 +46,6 @@ services:
 #       interval: 10s
 #       timeout: 5s
 #       retries: 5
-# volumes:
 #   db-data:
 # secrets:
 #   db-password:
