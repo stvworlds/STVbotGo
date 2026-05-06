@@ -2,4 +2,4 @@ environment: some
 
 startupChannelID: "YOUR_PRODUCTION_CHANNEL_ID"
 
-test: 67
+test: 42

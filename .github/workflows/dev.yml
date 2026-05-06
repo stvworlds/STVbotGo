@@ -18,7 +18,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Deploy STVbotGo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Login to GitHub Container Registry
@@ -51,4 +51,4 @@ jobs:
         run: docker rm -f STVbotGoDev || true
 
       - name: Run Docker container
-        run: docker run -d --restart unless-stopped -p 1235:1235 --name STVbotGoDev -e APP_CONFIG=dev -e TOKEN="${{ secrets.DEV_TOKEN }}" ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        run: docker run -d --restart unless-stopped -p 1235:1234 --name STVbotGoDev -e APP_CONFIG=dev -e TOKEN="${{ secrets.DEV_TOKEN }}" ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
