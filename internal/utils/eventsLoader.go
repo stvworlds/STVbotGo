@@ -3,12 +3,10 @@ package utils
 import (
 	"log"
 
-	"github.com/bwmarrin/discordgo"
-)
-
-import (
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/handlers/events"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func eventsLoader(s *discordgo.Session, cfg config.Env) {
@@ -18,6 +16,7 @@ func eventsLoader(s *discordgo.Session, cfg config.Env) {
 
 	s.AddHandler(events.OnMemberJoin)
 	s.AddHandler(events.OnIpMessage)
+	s.AddHandler(events.HelloWorld)
 
 	log.Println("Events are now loaded.")
 }
