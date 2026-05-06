@@ -1,4 +1,4 @@
-name: Deploy STVbotGo
+name: Deploy dev STVbotGo
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Deploy STVbotGo
