@@ -1,20 +1,59 @@
 package events
 
 import (
+	"log"
+
 	"github.com/bwmarrin/discordgo"
 )
 
-func AutoThreadOpen(s *discordgo.Session, m *discordgo.MessageCreate) {
+type AutoThreadOpenHandler struct {
+	NewsChannels map[string]struct{}
+}
 
-	Id := make([]int, 0)
-	Id = append(Id, 1501679320937005136)
-	for i := 0; i < len(Id); i++ {
-		if m.ChannelID != Id[i] {
-			return
-		}
+func NewAutoThreadOpenHandler(newsChannels []string) *AutoThreadOpenHandler {
+	channels := make(map[string]struct{}, len(newsChannels))
+
+	for _, channelID := range newsChannels {
+		channels[channelID] = struct{}{}
 	}
-	if m.ChanelType != 5 {
+
+	return &AutoThreadOpenHandler{
+		NewsChannels: channels,
+	}
+}
+
+func (h *AutoThreadOpenHandler) AutoThreadOpen(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if len(h.NewsChannels) == 0 {
+		log.Println("News channels configuration is missing. Auto thread opening is disabled.")
 		return
 	}
-	s.MessageThreadStart(m.ChannelID, m.ID, "Auto Thread")
+
+	if _, ok := h.NewsChannels[m.ChannelID]; !ok {
+		return
+	}
+
+	channel, err := s.Channel(m.ChannelID)
+	if err != nil {
+		log.Printf("Failed to get channel %s: %v", m.ChannelID, err)
+		return
+	}
+
+	if channel.IsThread() {
+		return
+	}
+
+	if _, err = s.ChannelMessageCrosspost(m.ChannelID, m.ID); err != nil {
+		log.Printf("Failed to crosspost message %s in channel %s: %v", m.ID, m.ChannelID, err)
+		return
+	}
+
+	thread, err := s.MessageThreadStart(m.ChannelID, m.ID, ".", 60)
+	if err != nil {
+		log.Printf("Failed to create thread for message %s in channel %s: %v", m.ID, m.ChannelID, err)
+		return
+	}
+
+	if _, err = s.ChannelMessageSend(thread.ID, "Обговорення 🔽"); err != nil {
+		log.Printf("Failed to send message to thread %s: %v", thread.ID, err)
+	}
 }

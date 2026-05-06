@@ -10,9 +10,10 @@ import (
 )
 
 type Env struct {
-	Token            string `yaml:"token"`
-	Environment      string `yaml:"environment"`
-	StartupChannelID string `yaml:"startupChannelID"`
+	Token            string   `yaml:"token"`
+	Environment      string   `yaml:"environment"`
+	StartupChannelID string   `yaml:"startupChannelID"`
+	NewsChannels     []string `yaml:"newsChannels"`
 }
 
 func Load() (Env, error) {
@@ -42,9 +43,6 @@ func Load() (Env, error) {
 	}
 
 	applyEnvOverrides(&env)
-
-	fmt.Printf("Environment: %s\n", env.Environment)
-	fmt.Printf("Token length: %d\n", len(env.Token))
 
 	if env.Token == "" {
 		return Env{}, fmt.Errorf("TOKEN is empty")

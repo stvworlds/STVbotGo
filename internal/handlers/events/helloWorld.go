@@ -12,7 +12,10 @@ func HelloWorld(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	if strings.ToLower(m.Content) == "hello world" {
-		s.ChannelMessageSend(m.ChannelID, "Hello World!")
+		_, err := s.ChannelMessageSend(m.ChannelID, "Hello World!")
+		if err != nil {
+			return
+		}
 	}
 
 }

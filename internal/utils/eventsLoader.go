@@ -18,5 +18,8 @@ func eventsLoader(s *discordgo.Session, cfg config.Env) {
 	s.AddHandler(events.OnIpMessage)
 	s.AddHandler(events.HelloWorld)
 
+	autoThreadOpenHandler := events.NewAutoThreadOpenHandler(cfg.NewsChannels)
+	s.AddHandler(autoThreadOpenHandler.AutoThreadOpen)
+
 	log.Println("Events are now loaded.")
 }
