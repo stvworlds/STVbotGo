@@ -1,7 +1,9 @@
 package events
 
 import (
-	"https://github.com/bwmarrin/discordgo"
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func HelloWorld(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -9,8 +11,8 @@ func HelloWorld(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	if m.Content.ToLower() == "hello world" {
-		s.ChanelMessageSend(m.ChannelID, "Hello World!")
+	if strings.ToLower(m.Content) == "hello world" {
+		s.ChannelMessageSend(m.ChannelID, "Hello World!")
 	}
 
 }
