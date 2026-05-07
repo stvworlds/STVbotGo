@@ -21,5 +21,6 @@ func eventsLoader(s *discordgo.Session, cfg config.Env) {
 	autoThreadOpenHandler := events.NewAutoThreadOpenHandler(cfg.NewsChannels)
 	s.AddHandler(autoThreadOpenHandler.AutoThreadOpen)
 	s.AddHandler(events.ShowDoog)
+	s.AddHandler(events.ShowCat)
 	log.Println("Events are now loaded.")
 }
