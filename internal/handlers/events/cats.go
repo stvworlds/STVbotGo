@@ -53,7 +53,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	catUrl := catResp[0].Url // ✅ правильное поле
 	fmt.Println(catUrl)
 
-	_, err = s.ChannelMessageSend(m.ChannelID, catUrl)
+	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
 		return
 	}
