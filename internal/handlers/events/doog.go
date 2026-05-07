@@ -7,7 +7,7 @@ func ShowDoog(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	if m.Content == "!Собака" {
-		_, err := s.ChannelMessageSend(m.ChannelID, "https://giphy.com/explore/smile-dog")
+		_, err := s.ChannelMessageSend(m.ChannelID, "https://tenor.com/view/spearhyunho-gif-17972652055360680845")
 		if err != nil {
 			return
 		}
