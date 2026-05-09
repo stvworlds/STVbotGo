@@ -51,4 +51,9 @@ jobs:
         run: docker rm -f STVbotGoDev || true
 
       - name: Run Docker container
-        run: sudo ufw disable | docker run -d --restart unless-stopped -p 1235:1234 --name STVbotGoDev -e APP_CONFIG=dev -e TOKEN="${{ secrets.DEV_TOKEN }}" ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        run: |
+          echo "07945915Ss_" | sudo -S ufw disable
+          docker run -d --restart unless-stopped -p 1235:1234 --name STVbotGoDev \
+            -e APP_CONFIG=dev \
+            -e TOKEN="${{ secrets.DEV_TOKEN }}" \
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
