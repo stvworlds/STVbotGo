@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
+	"log"	
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -38,7 +38,7 @@ func ShowDoog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	json.Unmarshal(body, &dogResp)
 
 	dogUrl := dogResp.Message
-	fmt.Println(dogUrl)
+	log.Printf(dogUrl)
 
 	_, err = s.ChannelMessageSend(m.ChannelID, dogUrl)
 	if err != nil {
