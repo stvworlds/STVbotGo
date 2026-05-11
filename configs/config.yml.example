@@ -4,3 +4,7 @@ startupChannelID: "YOUR_PRODUCTION_CHANNEL_ID"
 
 newsChannels:
   - "YOUR_NEWS_CHANNEL_ID"
+
+userNewsChannel: ""
+
+blogAPIKey: ""

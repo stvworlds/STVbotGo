@@ -14,6 +14,8 @@ type Env struct {
 	Environment      string   `yaml:"environment"`
 	StartupChannelID string   `yaml:"startupChannelID"`
 	NewsChannels     []string `yaml:"newsChannels"`
+	UserNewsChannel  string   `yaml:"userNewsChannel"`
+	BlogAPIKey       string   `yaml:"blogAPIKey"`
 }
 
 func Load() (Env, error) {
@@ -72,5 +74,9 @@ func applyEnvOverrides(env *Env) {
 
 	if environment := os.Getenv("APP_ENV"); environment != "" {
 		env.Environment = environment
+	}
+
+	if blogAPIKey := os.Getenv("BLOG_API_KEY"); blogAPIKey != "" {
+		env.BlogAPIKey = blogAPIKey
 	}
 }

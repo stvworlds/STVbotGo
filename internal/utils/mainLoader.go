@@ -20,7 +20,7 @@ func NewSession(token string, cfg config.Env) (*discordgo.Session, error) {
 		RegisterCommands(s)
 	})
 
-	commandLoader(session)
+	commandLoader(session, cfg)
 	eventsLoader(session, cfg)
 
 	log.Println("Bot is now running. Press CTRL-C to exit.")
