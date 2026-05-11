@@ -21,7 +21,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	catsName := []string{"котик", "котики", "кот", "коты", "кошка", "кошки", "кошечка", "кошечки"}
 	found := false
 	for _, name := range catsName {
-		if m.Content == name {
+		if string.ToLower(m.Content) == name {
 			found = true
 			break
 		}
