@@ -31,5 +31,12 @@ func RegisterCommands(s *discordgo.Session) {
 		log.Printf("failed to register /convert command: %v", err)
 	}
 
+	if _, err := s.ApplicationCommandCreate(applicationID, "", &discordgo.ApplicationCommand{
+		Name:        "create-news",
+		Description: "Створити новину",
+	}); err != nil {
+		log.Printf("failed to register /create-news command: %v", err)
+	}
+
 	log.Println("Commands registered")
 }

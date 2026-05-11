@@ -56,13 +56,8 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-<<<<<<< HEAD
-	catUrl := catResp[0].Url // ✅ правильное поле
-	log.Printf(catUrl)
-
-=======
 	catUrl := catResp[0].Url
->>>>>>> 04ab3f7ae38132b11c1eaa2f4afd035b77ae0956
+  
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
 		log.Println("Ошибка отправки сообщения:", err)
