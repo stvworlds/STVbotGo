@@ -2,7 +2,10 @@ package events
 
 import (
 	"encoding/json"
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04ab3f7ae38132b11c1eaa2f4afd035b77ae0956
 	"io"
 	"log"
 	"net/http"

@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,42 +20,52 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catsName := []string{"котик", "котики", "кот", "коты", "кошка", "кошки", "кошечка", "кошечки"}
+	content := strings.TrimSpace(strings.ToLower(m.Content))
 
 	found := false
 	for _, name := range catsName {
-		if m.Content == name {
+		if content == name {
 			found = true
 			break
 		}
 	}
-
 	if !found {
 		return
 	}
 
 	resp, err := http.Get("https://api.thecatapi.com/v1/images/search")
 	if err != nil {
+		log.Println("Ошибка запроса:", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		log.Println("Ошибка чтения тела:", err)
 		return
 	}
 
 	var catResp []CatResponse
-	json.Unmarshal(body, &catResp)
+	if err := json.Unmarshal(body, &catResp); err != nil {
+		log.Println("Ошибка парсинга JSON:", err)
+		return
+	}
 
 	if len(catResp) == 0 {
 		return
 	}
 
+<<<<<<< HEAD
 	catUrl := catResp[0].Url // ✅ правильное поле
 	log.Printf(catUrl)
 
+=======
+	catUrl := catResp[0].Url
+>>>>>>> 04ab3f7ae38132b11c1eaa2f4afd035b77ae0956
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
+		log.Println("Ошибка отправки сообщения:", err)
 		return
 	}
 }
