@@ -2,10 +2,10 @@ package events
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
-	"log"	
+
 	"github.com/bwmarrin/discordgo"
 )
 

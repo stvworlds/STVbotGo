@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,9 +20,11 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catsName := []string{"котик", "котики", "кот", "коты", "кошка", "кошки", "кошечка", "кошечки"}
+	content := strings.TrimSpace(strings.ToLower(m.Content))
+
 	found := false
 	for _, name := range catsName {
-		if string.ToLower(m.Content) == name {
+		if content == name {
 			found = true
 			break
 		}
