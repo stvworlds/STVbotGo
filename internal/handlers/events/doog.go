@@ -2,8 +2,9 @@ package events
 
 import (
 	"encoding/json"
-	"fmt"
+
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/bwmarrin/discordgo"
@@ -27,18 +28,18 @@ func ShowDoog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		return
 	}
-	defer resp.Body.Close() // ← сразу после проверки
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
 
-	var dogResp DogResponse // ← объявляем переменную
+	var dogResp DogResponse
 	json.Unmarshal(body, &dogResp)
 
 	dogUrl := dogResp.Message
-	fmt.Println(dogUrl)
+	log.Printf(dogUrl)
 
 	_, err = s.ChannelMessageSend(m.ChannelID, dogUrl)
 	if err != nil {

@@ -2,8 +2,8 @@ package events
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/bwmarrin/discordgo"
@@ -51,7 +51,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catUrl := catResp[0].Url // ✅ правильное поле
-	fmt.Println(catUrl)
+	log.Printf(catUrl)
 
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
