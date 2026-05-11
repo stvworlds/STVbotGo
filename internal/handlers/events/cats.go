@@ -51,7 +51,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catUrl := catResp[0].Url 
-	log.Printf(catUrl)
+	fmt.PrintLn(catUrl)
 
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
