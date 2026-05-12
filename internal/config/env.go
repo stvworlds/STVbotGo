@@ -15,6 +15,8 @@ type Env struct {
 	StartupChannelID string   `yaml:"startupChannelID"`
 	NewsChannels     []string `yaml:"newsChannels"`
 	UserNewsChannel  string   `yaml:"userNewsChannel"`
+	NewsGuildID      string   `yaml:"newsGuildID"`
+	NewsRoleID       string   `yaml:"newsRoleID"`
 	BlogAPIKey       string   `yaml:"blogAPIKey"`
 }
 

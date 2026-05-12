@@ -120,7 +120,18 @@ func handleCreateNewsCommand(s *discordgo.Session, i *discordgo.InteractionCreat
 }
 
 func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) {
+
 	if i.ModalSubmitData().CustomID != createNewsModalID {
+		return
+	}
+
+	if !checkAccessRole(s, i, cfg) {
+		respondEphemeral(s, i, "❌ У вас немає прав на створення новин.")
+		return
+	}
+
+	if checkUserHasTimeout(s, i, cfg) {
+		respondEphemeral(s, i, "❌ У вас є активний Тайм-аут")
 		return
 	}
 
@@ -256,62 +267,73 @@ func extractNewsID(responseBody []byte) (string, error) {
 }
 
 func buildNewsMessageComponents(news createNewsRequest, newsID string, newsURL string) []discordgo.MessageComponent {
+	components := []discordgo.MessageComponent{
+		buildNewsHeaderSection(news),
+		discordgo.Separator{
+			Divider: new(true),
+		},
+		discordgo.TextDisplay{
+			Content: buildNewsDescription(news),
+		},
+		buildNewsActionsRow(newsURL),
+		discordgo.Separator{
+			Divider: new(true),
+		},
+	}
+
+	if news.Thumbnail != "" {
+		components = append(components, buildNewsImage(news))
+	}
+
+	components = append(
+		components,
+		discordgo.TextDisplay{
+			Content: buildNewsPostData(news, newsID),
+		},
+		discordgo.TextDisplay{
+			Content: "-# STEVIOUS • Новини сервера",
+		},
+	)
+
 	return []discordgo.MessageComponent{
 		discordgo.Container{
-			Components: []discordgo.MessageComponent{
-				buildNewsHeaderSection(news),
-				discordgo.Separator{
-					Divider: new(true),
-				},
-				discordgo.TextDisplay{
-					Content: buildNewsDescription(news, newsID),
-				},
-				discordgo.Separator{
-					Divider: new(true),
-				},
-				buildNewsActionsRow(newsURL),
-				discordgo.TextDisplay{
-					Content: "-# STEVIOUS • Новини сервера",
-				},
-			},
+			Components: components,
 		},
 	}
 }
 
 func buildNewsHeaderSection(news createNewsRequest) discordgo.MessageComponent {
-	if news.Thumbnail == "" {
-		return discordgo.TextDisplay{
-			Content: fmt.Sprintf(
-				"## 📰 %s",
-				news.Title,
-			),
-		}
+	return discordgo.TextDisplay{
+		Content: fmt.Sprintf(
+			"## 📰 %s",
+			news.Title,
+		),
 	}
+}
 
-	return discordgo.Section{
-		Components: []discordgo.MessageComponent{
-			discordgo.TextDisplay{
-				Content: fmt.Sprintf(
-					"## 📰 %s",
-					news.Title,
-				),
+func buildNewsDescription(news createNewsRequest) string {
+	return fmt.Sprintf(
+		"📝 Анонс \n%s",
+		news.Anons,
+	)
+}
+
+func buildNewsImage(news createNewsRequest) discordgo.MessageComponent {
+	return discordgo.MediaGallery{
+		Items: []discordgo.MediaGalleryItem{
+			{
+				Media: discordgo.UnfurledMediaItem{
+					URL: news.Thumbnail,
+				},
+				Description: ptr("News image"),
 			},
-		},
-		Accessory: discordgo.Thumbnail{
-			Media: discordgo.UnfurledMediaItem{
-				URL: news.Thumbnail,
-			},
-			Description: ptr("News thumbnail"),
 		},
 	}
 }
 
-func buildNewsDescription(news createNewsRequest, newsID string) string {
+func buildNewsPostData(news createNewsRequest, newsID string) string {
 	return fmt.Sprintf(
-		"**📝 %s\n\n"+
-			"**👤 Автор** <@%s> • "+
-			"**🆔 ID новини** `%s`",
-		news.Anons,
+		"-# 👤 Автор <@%s> • 🆔 ID новини `%s`",
 		news.Author,
 		newsID,
 	)
@@ -409,4 +431,34 @@ func respondEphemeral(s *discordgo.Session, i *discordgo.InteractionCreate, cont
 
 func ptr[T any](value T) *T {
 	return &value
+}
+
+func checkAccessRole(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) bool {
+	roleID := cfg.NewsRoleID
+	member, err := s.GuildMember(cfg.NewsGuildID, i.Member.User.ID)
+	if err != nil {
+		log.Printf("failed to fetch guild member: %v", err)
+		return false
+	}
+
+	for _, r := range member.Roles {
+		if r == roleID {
+			return true
+		}
+	}
+
+	return false
+}
+
+func checkUserHasTimeout(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) bool {
+	member, err := s.GuildMember(cfg.NewsGuildID, i.Member.User.ID)
+	if err != nil {
+		log.Printf("failed to fetch guild member: %v", err)
+		return false
+	}
+	if member.CommunicationDisabledUntil != nil {
+		return true
+	}
+
+	return false
 }
