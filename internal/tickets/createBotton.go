@@ -13,19 +13,41 @@ func OpenTicketButton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	data := i.MessageComponentData()
 
-	if data.CustomID != "stv_tickets_open" {
-		return
-	}
+	switch data.CustomID {
 
-	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: "Ти натиснув кнопку!",
-			Flags:   discordgo.MessageFlagsEphemeral,
-		},
-	})
-	if err != nil {
-		log.Printf("Error responding to interaction: %v", err)
-		return
+	case "stv_tickets_open_skargi":
+		{
+			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: "Ти натиснув кнопку! Для скарг",
+					Flags:   discordgo.MessageFlagsEphemeral,
+				},
+			})
+			if err != nil {
+				log.Printf("Error responding to interaction: %v", err)
+				return
+			}
+		}
+
+	case "stv_tickets_open_pidtrimka":
+		{
+			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: "Ти натиснув кнопку! Для Підтримки",
+					Flags:   discordgo.MessageFlagsEphemeral,
+				},
+			})
+			if err != nil {
+				log.Printf("Error responding to interaction: %v", err)
+				return
+			}
+		}
+	default:
+		{
+			return
+		}
+
 	}
 }

@@ -12,6 +12,10 @@ const (
 	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
 )
 
+func ptr[T any](value T) *T {
+	return &value
+}
+
 func SendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
@@ -52,6 +56,35 @@ func buildComponents() []discordgo.MessageComponent {
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
 							CustomID: "stv_tickets_open",
+						},
+					},
+				},
+
+				discordgo.Separator{
+					Divider: ptr(true),
+				},
+
+				discordgo.ActionsRow{
+					Components: []discordgo.MessageComponent{
+						discordgo.SelectMenu{
+							CustomID:    "stv_tickets_select",
+							Placeholder: "Оберіть категорію",
+							Options: []discordgo.SelectMenuOption{
+								{
+									Label: "Підтримка",
+									Value: "pidtrimka",
+									Emoji: &discordgo.ComponentEmoji{
+										Name: "🦦",
+									},
+								},
+								{
+									Label: "Скарги",
+									Value: "skargi",
+									Emoji: &discordgo.ComponentEmoji{
+										Name: "☠️",
+									},
+								},
+							},
 						},
 					},
 				},

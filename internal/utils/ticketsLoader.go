@@ -12,5 +12,6 @@ func ticketsLoader(s *discordgo.Session, cfg config.Env) {
 
 	s.AddHandler(tickets.SendOpenTicketMessage)
 	s.AddHandler(tickets.OpenTicketButton)
+	s.AddHandler(tickets.TicketSelectMenu)
 	log.Println("Tickets are now loaded")
 }
