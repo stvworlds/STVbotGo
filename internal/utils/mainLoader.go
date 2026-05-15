@@ -22,6 +22,7 @@ func NewSession(token string, cfg config.Env) (*discordgo.Session, error) {
 
 	commandLoader(session, cfg)
 	eventsLoader(session, cfg)
+	ticketsLoader(session, cfg)
 
 	log.Println("Bot is now running. Press CTRL-C to exit.")
 	return session, nil
