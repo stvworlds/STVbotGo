@@ -3,6 +3,7 @@ package utils
 import (
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/tickets"
+	"STVbotGo/internal/tickets/ticketsInteraction"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,7 +12,7 @@ import (
 func ticketsLoader(s *discordgo.Session, cfg config.Env) {
 
 	s.AddHandler(tickets.SendOpenTicketMessage)
-	s.AddHandler(tickets.OpenTicketButton)
-	s.AddHandler(tickets.TicketSelectMenu)
+	s.AddHandler(ticketsInteraction.OpenTicketButton)
+	s.AddHandler(ticketsInteraction.TicketSelectMenu)
 	log.Println("Tickets are now loaded")
 }
