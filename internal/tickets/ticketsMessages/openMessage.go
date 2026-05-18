@@ -1,9 +1,27 @@
 package ticketsMessages
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"math/rand"
+	"time"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 func ptr[T any](value T) *T {
 	return &value
+}
+
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func randomString(length int) string {
+	result := make([]byte, length)
+
+	for i := range result {
+		result[i] = chars[rng.Intn(len(chars))]
+	}
+	return string(result)
 }
 
 func OpenMessageComponents() []discordgo.MessageComponent {
@@ -37,7 +55,7 @@ func OpenMessageComponents() []discordgo.MessageComponent {
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.SelectMenu{
-							CustomID:    "stv_tickets_select",
+							CustomID:    "stv_tickets_select&" + randomString(8),
 							Placeholder: "📩 Обери категорію в меню нижче",
 							Options: []discordgo.SelectMenuOption{
 								{

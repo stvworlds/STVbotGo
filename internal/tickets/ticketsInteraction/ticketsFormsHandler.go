@@ -40,11 +40,9 @@ func OpenTicketButton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	switch data.CustomID {
 
-	case "stv_tickets_open_support", "admin-report", "user-report", "message":
+	case "stv_tickets_open_support", "stv_tickets_open_admin-report", "stv_tickets_open_user-report", "stv_tickets_open_message":
 		{
-
 			openTicket(message(text), s, i)
-
 		}
 
 	default:
