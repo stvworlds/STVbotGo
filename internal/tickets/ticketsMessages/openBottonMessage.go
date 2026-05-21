@@ -1,16 +1,22 @@
 package ticketsMessages
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"STVbotGo/internal/tickets/ticketsForms"
 
-var ticketTypeTexts = map[string]string{
-	"support":      "🛟 Ви обрали категорію **Підтримка**.\n> Натисніть кнопку нижче, щоб відкрити форму звернення до підтримки.",
-	"admin-report": "🎰 Ви обрали категорію **Скарга на гравця**.\n> Натисніть кнопку нижче, щоб подати скаргу.",
-	"user-report":  "☠️ Ви обрали категорію **Скарга на адміністрацію**.\n> Натисніть кнопку нижче, щоб описати ситуацію.",
-	"message":      "📝 Ви обрали категорію **Повідомлення**.\n> Натисніть кнопку нижче, щоб залишити повідомлення адміністрації.",
+	"github.com/bwmarrin/discordgo"
+)
+
+var ticketTypeTexts = map[ticketsForms.TicketType]string{
+	ticketsForms.TicketSupport:     "🛟 Ви обрали категорію **Підтримка**.\n> Натисніть кнопку нижче, щоб відкрити форму звернення до підтримки.",
+	ticketsForms.TicketAdminReport: "🎰 Ви обрали категорію **Скарга на адміністрацію**.\n> Натисніть кнопку нижче, щоб описати ситуацію.",
+	ticketsForms.TicketUserReport:  "☠️ Ви обрали категорію **Скарга на гравця**.\n> Натисніть кнопку нижче, щоб подати скаргу.",
+	ticketsForms.TicketMessage:     "📝 Ви обрали категорію **Повідомлення**.\n> Натисніть кнопку нижче, щоб залишити повідомлення адміністрації.",
 }
 
 func OpenBottonComponents(mtype string) []discordgo.MessageComponent {
-	text, ok := ticketTypeTexts[mtype]
+	ticketType := ticketsForms.TicketType(mtype)
+
+	text, ok := ticketTypeTexts[ticketType]
 	if !ok {
 		text = "Натисніть кнопку, щоб відкрити форму подачі заявки."
 	}
@@ -29,7 +35,7 @@ func OpenBottonComponents(mtype string) []discordgo.MessageComponent {
 							Label:    "Відкрити",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							CustomID: "stv_tickets_open_" + mtype,
+							CustomID: ticketsForms.ButtonID(ticketType),
 						},
 					},
 				},
