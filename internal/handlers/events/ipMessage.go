@@ -3,8 +3,16 @@ package events
 import (
 	"fmt"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	register(func(s *discordgo.Session, _ config.Env) {
+		s.AddHandler(OnIpMessage)
+	})
+}
 
 func OnIpMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {

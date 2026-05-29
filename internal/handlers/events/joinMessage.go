@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -15,6 +17,12 @@ const (
 	supportURL = "https://discord.com/channels/1335083670364618772/1395637822110695476"
 	reviewsURL = "https://discord.com/channels/1335083670364618772/1443261484103630901"
 )
+
+func init() {
+	register(func(s *discordgo.Session, _ config.Env) {
+		s.AddHandler(OnMemberJoin)
+	})
+}
 
 func OnMemberJoin(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
 	sendWelcomeDM(s, m)

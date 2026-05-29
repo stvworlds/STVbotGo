@@ -3,8 +3,17 @@ package events
 import (
 	"log"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	register(func(s *discordgo.Session, cfg config.Env) {
+		autoThreadOpenHandler := NewAutoThreadOpenHandler(cfg.NewsChannels)
+		s.AddHandler(autoThreadOpenHandler.AutoThreadOpen)
+	})
+}
 
 type AutoThreadOpenHandler struct {
 	NewsChannels map[string]struct{}

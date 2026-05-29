@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"log"
-
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/handlers/events"
 
@@ -10,17 +8,5 @@ import (
 )
 
 func eventsLoader(s *discordgo.Session, cfg config.Env) {
-
-	readyHandler := events.NewReadyHandler(cfg.StartupChannelID)
-	s.AddHandler(readyHandler.OnReady)
-
-	s.AddHandler(events.OnMemberJoin)
-	s.AddHandler(events.OnIpMessage)
-	s.AddHandler(events.HelloWorld)
-
-	autoThreadOpenHandler := events.NewAutoThreadOpenHandler(cfg.NewsChannels)
-	s.AddHandler(autoThreadOpenHandler.AutoThreadOpen)
-	s.AddHandler(events.ShowDoog)
-	s.AddHandler(events.ShowCat)
-	log.Println("Events are now loaded.")
+	events.RegisterHandlers(s, cfg)
 }

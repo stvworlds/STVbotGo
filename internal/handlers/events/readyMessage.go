@@ -3,8 +3,17 @@ package events
 import (
 	"log"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	register(func(s *discordgo.Session, cfg config.Env) {
+		readyHandler := NewReadyHandler(cfg.StartupChannelID)
+		s.AddHandler(readyHandler.OnReady)
+	})
+}
 
 type ReadyHandler struct {
 	StartupChannelID string

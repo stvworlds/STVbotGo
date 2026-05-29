@@ -2,13 +2,21 @@ package events
 
 import (
 	"encoding/json"
-  
+
 	"io"
 	"log"
 	"net/http"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	register(func(s *discordgo.Session, _ config.Env) {
+		s.AddHandler(ShowDoog)
+	})
+}
 
 type DogResponse struct {
 	Message string `json:"message"`

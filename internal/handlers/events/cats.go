@@ -7,8 +7,16 @@ import (
 	"net/http"
 	"strings"
 
+	"STVbotGo/internal/config"
+
 	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	register(func(s *discordgo.Session, _ config.Env) {
+		s.AddHandler(ShowCat)
+	})
+}
 
 type CatResponse struct {
 	Url string `json:"url"`
@@ -57,7 +65,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catUrl := catResp[0].Url
-  
+
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
 		log.Println("Ошибка отправки сообщения:", err)
