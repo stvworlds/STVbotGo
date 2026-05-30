@@ -11,3 +11,9 @@ newsGuildID: ""
 newsRoleID: ""
 
 blogAPIKey: ""
+
+scamChannelID: ""
+
+actionsLogChannelID: ""
+
+appLogChannelID: ""
