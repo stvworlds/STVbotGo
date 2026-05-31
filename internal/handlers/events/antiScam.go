@@ -2,6 +2,7 @@ package events
 
 import (
 	"STVbotGo/internal/config"
+	"fmt"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -42,7 +43,7 @@ func (h *AntiScamConfig) antiSpam(s *discordgo.Session, m *discordgo.MessageCrea
 		return
 	}
 
-	if len(m.Attachments) < 3 {
+	if len(m.Attachments) < 2 {
 		return
 	}
 
@@ -59,7 +60,7 @@ func (h *AntiScamConfig) antiSpam(s *discordgo.Session, m *discordgo.MessageCrea
 		banStatus = "Failed"
 	}
 
-	sendUserMessage(s, m, h.ActionsLogChannelID, banStatus)
+	sendAdminMessage(s, m, h.ActionsLogChannelID, banStatus)
 }
 
 func banUser(s *discordgo.Session, m *discordgo.MessageCreate) error {
@@ -84,9 +85,52 @@ func banUser(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	return nil
 }
 
-func sendUserMessage(s *discordgo.Session, m *discordgo.MessageCreate, channel string, status string) {
-	_, err := s.ChannelMessageSend(channel, "User has been banned for anti-scam measures."+status)
+func sendAdminMessage(s *discordgo.Session, m *discordgo.MessageCreate, channel string, status string) {
+	_, err := s.ChannelMessageSendComplex(channel, &discordgo.MessageSend{
+		Components: adminMessageComponents(m, status),
+		Flags:      messageFlagsIsComponentsV2,
+	})
 	if err != nil {
-		log.Printf("Failed to send admin message: %v", err)
+		log.Println("Failed to send admin message:", err)
+		return
+	}
+}
+
+func adminMessageComponents(m *discordgo.MessageCreate, status string) []discordgo.MessageComponent {
+	return []discordgo.MessageComponent{
+		discordgo.Container{
+			AccentColor: ptr(6164128),
+			Components: []discordgo.MessageComponent{
+				discordgo.Section{
+					Components: []discordgo.MessageComponent{
+						discordgo.TextDisplay{
+							Content: m.Author.Mention() + " був відмічений системою як спамер. \nCтатус покарання: " + status,
+						},
+					},
+					Accessory: discordgo.Thumbnail{
+						Media: discordgo.UnfurledMediaItem{
+							URL: m.Author.AvatarURL("256"),
+						},
+						Description: ptr("Scam Avatar"),
+					},
+				},
+			},
+		},
+		discordgo.Container{
+			AccentColor: ptr(6164128),
+			Components: []discordgo.MessageComponent{
+				discordgo.TextDisplay{
+					Content: fmt.Sprintf("📜 Айді користувача: \n```\n%s\n```", m.Author.ID),
+				},
+			},
+		},
+		discordgo.Container{
+			AccentColor: ptr(6164128),
+			Components: []discordgo.MessageComponent{
+				discordgo.TextDisplay{
+					Content: fmt.Sprintf("🎰 Час приєднання до серверу:\n<t:%d:R>", m.Member.JoinedAt.Unix()),
+				},
+			},
+		},
 	}
 }
