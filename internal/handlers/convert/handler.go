@@ -1,4 +1,4 @@
-package commands
+package convert
 
 import (
 	"fmt"
@@ -14,9 +14,7 @@ import (
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
-const convertCommandName = "convert"
-
-func CommandConvert(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func commandConvert(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.Type != discordgo.InteractionApplicationCommand {
 		return
 	}
@@ -112,7 +110,7 @@ func convertAttachmentToGIF(attachment *discordgo.MessageAttachment) (string, fu
 	err = ffmpeg.
 		Input(inputPath).
 		Output(outputPath, ffmpeg.KwArgs{
-			"filter_complex": "[0:v]fps=15,scale=360:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=sierra2_4a:diff_mode=rectangle",
+			"filter_complex": filterComplex,
 			"loop":           "0",
 		}).
 		OverWriteOutput().

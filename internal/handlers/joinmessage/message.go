@@ -1,48 +1,10 @@
-package events
+package joinmessage
 
 import (
 	"fmt"
-	"log"
-
-	"STVbotGo/internal/config"
 
 	"github.com/bwmarrin/discordgo"
 )
-
-const (
-	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
-
-	rulesURL   = "https://stvworlds.win/docs/rules"
-	newsURL    = "https://stvworlds.win/blog"
-	supportURL = "https://discord.com/channels/1335083670364618772/1395637822110695476"
-	reviewsURL = "https://discord.com/channels/1335083670364618772/1443261484103630901"
-)
-
-func init() {
-	register(func(s *discordgo.Session, _ config.Env) {
-		s.AddHandler(OnMemberJoin)
-	})
-}
-
-func OnMemberJoin(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
-	sendWelcomeDM(s, m)
-}
-
-func sendWelcomeDM(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
-	channel, err := s.UserChannelCreate(m.User.ID)
-	if err != nil {
-		log.Printf("Error creating DM channel: %v\n", err)
-		return
-	}
-
-	_, err = s.ChannelMessageSendComplex(channel.ID, &discordgo.MessageSend{
-		Components: buildWelcomeComponents(m.User),
-		Flags:      messageFlagsIsComponentsV2,
-	})
-	if err != nil {
-		log.Printf("Error sending welcome DM: %v\n", err)
-	}
-}
 
 func buildWelcomeComponents(user *discordgo.User) []discordgo.MessageComponent {
 	return []discordgo.MessageComponent{
@@ -71,10 +33,6 @@ func buildWelcomeComponents(user *discordgo.User) []discordgo.MessageComponent {
 			},
 		},
 	}
-}
-
-func ptr[T any](value T) *T {
-	return &value
 }
 
 func buildWelcomeMessage(user *discordgo.User) string {

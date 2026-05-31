@@ -1,4 +1,4 @@
-package events
+package cats
 
 import (
 	"encoding/json"
@@ -7,22 +7,10 @@ import (
 	"net/http"
 	"strings"
 
-	"STVbotGo/internal/config"
-
 	"github.com/bwmarrin/discordgo"
 )
 
-func init() {
-	register(func(s *discordgo.Session, _ config.Env) {
-		s.AddHandler(ShowCat)
-	})
-}
-
-type CatResponse struct {
-	Url string `json:"url"`
-}
-
-func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
+func showCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -46,7 +34,12 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Println("Ошибка запроса:", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Ошибка закрытия тела запроса:", err)
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
