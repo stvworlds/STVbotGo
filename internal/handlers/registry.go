@@ -9,8 +9,6 @@ import (
 	"STVbotGo/internal/handlers/cats"
 	"STVbotGo/internal/handlers/convert"
 	"STVbotGo/internal/handlers/dog"
-	"STVbotGo/internal/handlers/helloworld"
-	"STVbotGo/internal/handlers/ipmessage"
 	"STVbotGo/internal/handlers/joinmessage"
 	"STVbotGo/internal/handlers/newscreate"
 	"STVbotGo/internal/handlers/ping"
@@ -28,8 +26,6 @@ func RegisterAll(s *discordgo.Session, cfg config.Env) {
 	autothreadopen.Register(s, cfg)
 	cats.Register(s, cfg)
 	dog.Register(s, cfg)
-	helloworld.Register(s, cfg)
-	ipmessage.Register(s, cfg)
 	joinmessage.Register(s, cfg)
 	readymessage.Register(s, cfg)
 
