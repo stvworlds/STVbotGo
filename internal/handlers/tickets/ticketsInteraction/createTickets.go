@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"STVbotGo/internal/tickets/ticketsForms"
+	"STVbotGo/internal/handlers/tickets/ticketsForms"
 
 	"github.com/bwmarrin/discordgo"
 )

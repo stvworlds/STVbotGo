@@ -1,7 +1,7 @@
 package ticketsInteraction
 
 import (
-	"STVbotGo/internal/tickets/ticketsMessages"
+	"STVbotGo/internal/handlers/tickets/ticketsMessages"
 	"log"
 	"strings"
 

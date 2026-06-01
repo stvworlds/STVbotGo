@@ -1,7 +1,7 @@
 package tickets
 
 import (
-	"STVbotGo/internal/tickets/ticketsMessages"
+	"STVbotGo/internal/handlers/tickets/ticketsMessages"
 	"log"
 	"strings"
 
@@ -13,7 +13,7 @@ const (
 	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
 )
 
-func SendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
+func sendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
 		return

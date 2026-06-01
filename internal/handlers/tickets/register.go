@@ -1,17 +1,15 @@
-package utils
+package tickets
 
 import (
 	"STVbotGo/internal/config"
-	"STVbotGo/internal/tickets"
-	"STVbotGo/internal/tickets/ticketsInteraction"
+	"STVbotGo/internal/handlers/tickets/ticketsInteraction"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func ticketsLoader(s *discordgo.Session, cfg config.Env) {
-
-	s.AddHandler(tickets.SendOpenTicketMessage)
+func Register(s *discordgo.Session, cfg config.Env) {
+	s.AddHandler(sendOpenTicketMessage)
 	s.AddHandler(ticketsInteraction.OpenTicketButton)
 	s.AddHandler(ticketsInteraction.TicketSelectMenu)
 	s.AddHandler(ticketsInteraction.HandleTicketFormSubmit)

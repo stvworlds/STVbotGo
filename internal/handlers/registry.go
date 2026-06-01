@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"STVbotGo/internal/handlers/tickets"
 	"log"
 
 	"STVbotGo/internal/config"
@@ -28,6 +29,8 @@ func RegisterAll(s *discordgo.Session, cfg config.Env) {
 	dog.Register(s, cfg)
 	joinmessage.Register(s, cfg)
 	readymessage.Register(s, cfg)
+
+	tickets.Register(s, cfg)
 
 	log.Println("Handlers are now loaded.")
 }

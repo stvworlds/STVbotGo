@@ -1,7 +1,7 @@
 package ticketsInteraction
 
 import (
-	"STVbotGo/internal/tickets/ticketsForms"
+	"STVbotGo/internal/handlers/tickets/ticketsForms"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
