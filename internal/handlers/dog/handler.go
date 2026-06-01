@@ -1,8 +1,8 @@
-package events
+package dog
 
 import (
 	"encoding/json"
-  
+
 	"io"
 	"log"
 	"net/http"
@@ -10,12 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type DogResponse struct {
-	Message string `json:"message"`
-	Status  string `json:"status"`
-}
-
-func ShowDoog(s *discordgo.Session, m *discordgo.MessageCreate) {
+func showDog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -28,15 +23,24 @@ func ShowDoog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		return
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Printf("Error closing response body: %v", err)
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
 
-	var dogResp DogResponse
-	json.Unmarshal(body, &dogResp)
+	var dogResp response
+	err = json.Unmarshal(body, &dogResp)
+	if err != nil {
+		log.Printf("Error unmarshaling JSON response: %v", err)
+		return
+	}
 
 	dogUrl := dogResp.Message
 	log.Printf(dogUrl)

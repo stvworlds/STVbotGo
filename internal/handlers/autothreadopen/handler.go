@@ -1,4 +1,4 @@
-package events
+package autothreadopen
 
 import (
 	"log"
@@ -6,29 +6,13 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type AutoThreadOpenHandler struct {
-	NewsChannels map[string]struct{}
-}
-
-func NewAutoThreadOpenHandler(newsChannels []string) *AutoThreadOpenHandler {
-	channels := make(map[string]struct{}, len(newsChannels))
-
-	for _, channelID := range newsChannels {
-		channels[channelID] = struct{}{}
-	}
-
-	return &AutoThreadOpenHandler{
-		NewsChannels: channels,
-	}
-}
-
-func (h *AutoThreadOpenHandler) AutoThreadOpen(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if len(h.NewsChannels) == 0 {
+func (h *cfg) autoThreadOpen(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if len(h.newsChannels) == 0 {
 		log.Println("News channels configuration is missing. Auto thread opening is disabled.")
 		return
 	}
 
-	if _, ok := h.NewsChannels[m.ChannelID]; !ok {
+	if _, ok := h.newsChannels[m.ChannelID]; !ok {
 		return
 	}
 
