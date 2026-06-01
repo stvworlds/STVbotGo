@@ -1,4 +1,4 @@
-package commands
+package ping
 
 import (
 	"fmt"
@@ -7,9 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const pingCommandName = "ping"
-
-func CommandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func commandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.Type != discordgo.InteractionApplicationCommand {
 		return
 	}
@@ -19,7 +17,7 @@ func CommandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	latency := s.HeartbeatLatency()
-	content := fmt.Sprintf("🏓 Понг: `%dms`", latency.Milliseconds())
+	content := fmt.Sprintf("Pong: `%dms`", latency.Milliseconds())
 
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,

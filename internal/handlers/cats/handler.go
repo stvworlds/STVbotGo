@@ -1,4 +1,4 @@
-package events
+package cats
 
 import (
 	"encoding/json"
@@ -10,11 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type CatResponse struct {
-	Url string `json:"url"`
-}
-
-func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
+func showCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -38,7 +34,12 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Println("Ошибка запроса:", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Ошибка закрытия тела запроса:", err)
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -57,7 +58,7 @@ func ShowCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	catUrl := catResp[0].Url
-  
+
 	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
 	if err != nil {
 		log.Println("Ошибка отправки сообщения:", err)

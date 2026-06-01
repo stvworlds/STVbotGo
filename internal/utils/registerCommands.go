@@ -3,38 +3,25 @@ package utils
 import (
 	"log"
 
+	"STVbotGo/internal/handlers/convert"
+	"STVbotGo/internal/handlers/newscreate"
+	"STVbotGo/internal/handlers/ping"
+
 	"github.com/bwmarrin/discordgo"
 )
 
 func RegisterCommands(s *discordgo.Session) {
 	applicationID := s.State.User.ID
 
-	if _, err := s.ApplicationCommandCreate(applicationID, "", &discordgo.ApplicationCommand{
-		Name:        "ping",
-		Description: "Показати пінг бота",
-	}); err != nil {
+	if err := ping.RegisterCommand(s, applicationID); err != nil {
 		log.Printf("failed to register /ping command: %v", err)
 	}
 
-	if _, err := s.ApplicationCommandCreate(applicationID, "", &discordgo.ApplicationCommand{
-		Name:        "convert",
-		Description: "Конвертувати файл у GIF",
-		Options: []*discordgo.ApplicationCommandOption{
-			{
-				Type:        discordgo.ApplicationCommandOptionAttachment,
-				Name:        "file",
-				Description: "Файл для конвертації: png, jpeg, jpg, mp4 або інший формат ffmpeg",
-				Required:    true,
-			},
-		},
-	}); err != nil {
+	if err := convert.RegisterCommand(s, applicationID); err != nil {
 		log.Printf("failed to register /convert command: %v", err)
 	}
 
-	if _, err := s.ApplicationCommandCreate(applicationID, "", &discordgo.ApplicationCommand{
-		Name:        "create-news",
-		Description: "Створити новину",
-	}); err != nil {
+	if err := newscreate.RegisterCommand(s, applicationID); err != nil {
 		log.Printf("failed to register /create-news command: %v", err)
 	}
 
