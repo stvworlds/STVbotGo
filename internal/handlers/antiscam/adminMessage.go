@@ -6,7 +6,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func adminMessageComponents(m *discordgo.MessageCreate, status string) []discordgo.MessageComponent {
+func adminMessageComponents(u *discordgo.User, banStatus string, messageStatus string, disabled bool) []discordgo.MessageComponent {
+
 	return []discordgo.MessageComponent{
 		discordgo.Container{
 			AccentColor: ptr(6164128),
@@ -14,12 +15,12 @@ func adminMessageComponents(m *discordgo.MessageCreate, status string) []discord
 				discordgo.Section{
 					Components: []discordgo.MessageComponent{
 						discordgo.TextDisplay{
-							Content: m.Author.Mention() + " був відмічений системою як спамер. \nCтатус покарання: " + status,
+							Content: "💀" + u.Mention() + " був відмічений системою як спамер. \n🔪 Cтатус покарання: `" + banStatus + "`\n✍️ Статус повідомлення: `" + messageStatus + "`",
 						},
 					},
 					Accessory: discordgo.Thumbnail{
 						Media: discordgo.UnfurledMediaItem{
-							URL: m.Author.AvatarURL("256"),
+							URL: u.AvatarURL("256"),
 						},
 						Description: ptr("Scam Avatar"),
 					},
@@ -30,15 +31,17 @@ func adminMessageComponents(m *discordgo.MessageCreate, status string) []discord
 			AccentColor: ptr(6164128),
 			Components: []discordgo.MessageComponent{
 				discordgo.TextDisplay{
-					Content: fmt.Sprintf("📜 Айді користувача: \n```\n%s\n```", m.Author.ID),
+					Content: fmt.Sprintf("📜 Айді користувача: \n```\n%s\n```", u.ID),
 				},
 			},
 		},
-		discordgo.Container{
-			AccentColor: ptr(6164128),
+		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
-				discordgo.TextDisplay{
-					Content: fmt.Sprintf("🎰 Час приєднання до серверу:\n<t:%d:R>", m.Member.JoinedAt.Unix()),
+				discordgo.Button{
+					Label:    "Зняти покарання",
+					Style:    discordgo.PrimaryButton,
+					CustomID: "anti_scam_ban_remove." + u.ID + "." + banStatus + "." + messageStatus,
+					Disabled: disabled,
 				},
 			},
 		},

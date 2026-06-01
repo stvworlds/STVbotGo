@@ -18,6 +18,7 @@ func ptr[T any](value T) *T {
 func Register(s *discordgo.Session, cfg config.Env) {
 	antiScamConfig := antiSpamHandler(cfg.ScamChannelID, cfg.ActionsLogChannelID)
 	s.AddHandler(antiScamConfig.antiSpam)
+	s.AddHandler(removeBotton)
 }
 
 type cfg struct {
