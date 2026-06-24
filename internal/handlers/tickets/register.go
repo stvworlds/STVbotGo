@@ -13,5 +13,6 @@ func Register(s *discordgo.Session, cfg config.Env) {
 	s.AddHandler(ticketsInteraction.OpenTicketButton)
 	s.AddHandler(ticketsInteraction.TicketSelectMenu)
 	s.AddHandler(ticketsInteraction.HandleTicketFormSubmit)
+	s.AddHandler(ticketsInteraction.TicketControlButtons(cfg))
 	log.Println("Tickets are now loaded")
 }
