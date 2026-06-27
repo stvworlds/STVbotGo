@@ -1,12 +1,10 @@
-package ticketsInteraction
+package ticketsOpenLogic
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsForms"
 	"fmt"
 	"log"
 	"strings"
-
-	"STVbotGo/internal/handlers/tickets/ticketsChanel"
-	"STVbotGo/internal/handlers/tickets/ticketsForms"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -21,7 +19,7 @@ type TicketCreateData struct {
 func CreateTickets(s *discordgo.Session, i *discordgo.InteractionCreate, data TicketCreateData) {
 	logTicketCreateData(data)
 
-	channel, err := ticketsChanel.CreateTicketChannel(s, ticketsChanel.TicketChannelData{
+	channel, err := CreateTicketChannel(s, TicketChannelData{
 		Type:    data.Type,
 		UserID:  data.UserID,
 		GuildID: data.GuildID,

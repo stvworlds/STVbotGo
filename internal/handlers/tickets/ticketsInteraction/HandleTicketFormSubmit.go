@@ -2,6 +2,8 @@ package ticketsInteraction
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsForms"
+	"STVbotGo/internal/handlers/tickets/ticketsOpenLogic"
+
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -22,7 +24,7 @@ func HandleTicketFormSubmit(s *discordgo.Session, i *discordgo.InteractionCreate
 		return
 	}
 
-	CreateTickets(s, i, TicketCreateData{
+	ticketsOpenLogic.CreateTickets(s, i, ticketsOpenLogic.TicketCreateData{
 		Type:    ticketType,
 		UserID:  interactionUserID(i),
 		GuildID: i.GuildID,

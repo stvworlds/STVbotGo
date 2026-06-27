@@ -1,11 +1,11 @@
 package ticketsInteraction
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsOpenLogic"
 	"fmt"
 	"log"
 
 	"STVbotGo/internal/config"
-	"STVbotGo/internal/handlers/tickets/ticketsChanel"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -18,9 +18,9 @@ func TicketControlButtons(cfg config.Env) func(*discordgo.Session, *discordgo.In
 
 		data := i.MessageComponentData()
 		switch data.CustomID {
-		case ticketsChanel.TicketAcceptButtonID:
+		case ticketsOpenLogic.TicketAcceptButtonID:
 			handleTicketAccept(s, i, cfg)
-		case ticketsChanel.TicketCloseButtonID:
+		case ticketsOpenLogic.TicketCloseButtonID:
 			handleTicketClose(s, i, cfg)
 		}
 	}

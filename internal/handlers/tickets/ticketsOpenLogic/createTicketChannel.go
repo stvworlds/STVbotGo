@@ -1,18 +1,14 @@
-package ticketsChanel
+package ticketsOpenLogic
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsForms"
 	"fmt"
 	"log"
 	"regexp"
 	"strings"
-	"sync/atomic"
-
-	"STVbotGo/internal/handlers/tickets/ticketsForms"
 
 	"github.com/bwmarrin/discordgo"
 )
-
-var ticketCounter uint64
 
 const (
 	TicketAcceptButtonID = "stv_tickets_accept"
@@ -112,7 +108,6 @@ func ticketPermissionOverwrites(s *discordgo.Session, guildID string, userID str
 }
 
 func ticketChannelName(s *discordgo.Session, data TicketChannelData) string {
-	ticketNumber := atomic.AddUint64(&ticketCounter, 1) - 1
 
 	username := sanitizeChannelName(ticketCreatorName(s, data.GuildID, data.UserID))
 	if username == "" {
@@ -121,10 +116,10 @@ func ticketChannelName(s *discordgo.Session, data TicketChannelData) string {
 
 	ticketType := sanitizeChannelName(string(data.Type))
 	if ticketType == "" {
-		ticketType = "ticket"
+		ticketType = "Невідомо"
 	}
 
-	return fmt.Sprintf("ticket-%d-%s-%s", ticketNumber, username, ticketType)
+	return fmt.Sprintf("-%s-%s", username, ticketType)
 }
 
 func ticketCreatorName(s *discordgo.Session, guildID string, userID string) string {
