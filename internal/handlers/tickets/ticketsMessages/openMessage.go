@@ -1,33 +1,15 @@
 package ticketsMessages
 
 import (
-	"math/rand"
-	"time"
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func ptr[T any](value T) *T {
-	return &value
-}
-
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-func randomString(length int) string {
-	result := make([]byte, length)
-
-	for i := range result {
-		result[i] = chars[rng.Intn(len(chars))]
-	}
-	return string(result)
-}
-
 func OpenMessageComponents() []discordgo.MessageComponent {
 	return []discordgo.MessageComponent{
 		discordgo.Container{
-			AccentColor: ptr(6164128),
+			AccentColor: ticketsData.Ptr(6164128),
 			Components: []discordgo.MessageComponent{
 
 				discordgo.Section{
@@ -44,18 +26,18 @@ func OpenMessageComponents() []discordgo.MessageComponent {
 						Media: discordgo.UnfurledMediaItem{
 							URL: "https://w7.pngwing.com/pngs/345/37/png-transparent-computer-icons-others-miscellaneous-blue-logo.png",
 						},
-						Description: ptr("Support"),
+						Description: ticketsData.Ptr("Support"),
 					},
 				},
 
 				discordgo.Separator{
-					Divider: ptr(true),
+					Divider: ticketsData.Ptr(true),
 				},
 
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.SelectMenu{
-							CustomID:    "stv_tickets_select&" + randomString(8),
+							CustomID:    "stv_tickets_select&" + ticketsData.RandomString(8),
 							Placeholder: "📩 Обери категорію в меню нижче",
 							Options: []discordgo.SelectMenuOption{
 								{

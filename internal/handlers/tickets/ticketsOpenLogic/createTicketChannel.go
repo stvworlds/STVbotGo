@@ -1,7 +1,8 @@
 package ticketsOpenLogic
 
 import (
-	"STVbotGo/internal/handlers/tickets/ticketsForms"
+	"STVbotGo/internal/handlers/tickets/ticketsData"
+	"STVbotGo/internal/handlers/tickets/ticketsMessages"
 	"fmt"
 	"log"
 	"regexp"
@@ -10,19 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const (
-	TicketAcceptButtonID = "stv_tickets_accept"
-	TicketCloseButtonID  = "stv_tickets_close"
-)
-
-type TicketChannelData struct {
-	Type    ticketsForms.TicketType
-	UserID  string
-	GuildID string
-	Fields  map[string]string
-}
-
-func CreateTicketChannel(s *discordgo.Session, data TicketChannelData) (*discordgo.Channel, error) {
+func CreateTicketChannel(s *discordgo.Session, data ticketsData.TicketChannelData) (*discordgo.Channel, error) {
 	if data.GuildID == "" {
 		return nil, fmt.Errorf("guild ID is empty")
 	}
@@ -46,7 +35,13 @@ func CreateTicketChannel(s *discordgo.Session, data TicketChannelData) (*discord
 		return nil, fmt.Errorf("create ticket channel: %w", err)
 	}
 
-	if _, err = s.ChannelMessageSendComplex(channel.ID, buildTicketStartMessage(data)); err != nil {
+	if _, err = s.ChannelMessageSendComplex(
+		channel.ID,
+		&discordgo.MessageSend{
+			Components: ticketsMessages.OpenTicketMessageComponents(data),
+			Flags:      ticketsData.MessageFlagsIsComponentsV2,
+		},
+	); err != nil {
 		log.Printf("failed to send start message to ticket channel %s: %v", channel.ID, err)
 	}
 
@@ -107,7 +102,7 @@ func ticketPermissionOverwrites(s *discordgo.Session, guildID string, userID str
 	return overwrites, nil
 }
 
-func ticketChannelName(s *discordgo.Session, data TicketChannelData) string {
+func ticketChannelName(s *discordgo.Session, data ticketsData.TicketChannelData) string {
 
 	username := sanitizeChannelName(ticketCreatorName(s, data.GuildID, data.UserID))
 	if username == "" {
@@ -151,56 +146,4 @@ func sanitizeChannelName(value string) string {
 
 	re = regexp.MustCompile(`-+`)
 	return strings.Trim(re.ReplaceAllString(value, "-"), "-")
-}
-
-func buildTicketStartMessage(data TicketChannelData) *discordgo.MessageSend {
-	topic := data.Fields["topic"]
-	description := data.Fields["description"]
-
-	if topic == "" {
-		topic = "Без теми"
-	}
-
-	if description == "" {
-		description = "Опис не вказано."
-	}
-
-	return &discordgo.MessageSend{
-		Content: fmt.Sprintf("<@%s>", data.UserID),
-		Embeds: []*discordgo.MessageEmbed{
-			{
-				Title:       fmt.Sprintf("Новий тикет: %s", data.Type),
-				Description: description,
-				Color:       0x2F80ED,
-				Fields: []*discordgo.MessageEmbedField{
-					{
-						Name:   "Користувач",
-						Value:  fmt.Sprintf("<@%s>\n`%s`", data.UserID, data.UserID),
-						Inline: true,
-					},
-					{
-						Name:   "Тема",
-						Value:  topic,
-						Inline: true,
-					},
-				},
-			},
-		},
-		Components: []discordgo.MessageComponent{
-			discordgo.ActionsRow{
-				Components: []discordgo.MessageComponent{
-					discordgo.Button{
-						Label:    "Прийняти тикет",
-						Style:    discordgo.SuccessButton,
-						CustomID: TicketAcceptButtonID,
-					},
-					discordgo.Button{
-						Label:    "Закрити тикет",
-						Style:    discordgo.DangerButton,
-						CustomID: TicketCloseButtonID,
-					},
-				},
-			},
-		},
-	}
 }

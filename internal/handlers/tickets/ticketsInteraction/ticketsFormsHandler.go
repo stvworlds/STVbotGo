@@ -1,6 +1,7 @@
 package ticketsInteraction
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/handlers/tickets/ticketsForms"
 	"strings"
 
@@ -17,7 +18,7 @@ func OpenTicketButton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	ticketType := ticketsForms.TicketType(strings.TrimPrefix(data.CustomID, ticketsForms.TicketButtonPrefix))
+	ticketType := ticketsData.TicketType(strings.TrimPrefix(data.CustomID, ticketsForms.TicketButtonPrefix))
 
 	if ticketsForms.IsKnownForm(ticketType) {
 		ticketsForms.OpenTicketForm(s, i, ticketType)

@@ -1,15 +1,12 @@
 package ticketsInteraction
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/handlers/tickets/ticketsMessages"
 	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-)
-
-const (
-	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
 )
 
 func TicketSelectMenu(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -38,7 +35,7 @@ func TicketSelectMenu(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 		Components: response,
-		Flags:      messageFlagsIsComponentsV2 | discordgo.MessageFlagsEphemeral,
+		Flags:      ticketsData.MessageFlagsIsComponentsV2 | discordgo.MessageFlagsEphemeral,
 	})
 	if err != nil {
 		log.Printf("Error responding to select menu interaction: %v", err)
@@ -51,7 +48,7 @@ func resendMessage(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
 			Components: ticketsMessages.OpenMessageComponents(),
-			Flags:      messageFlagsIsComponentsV2,
+			Flags:      ticketsData.MessageFlagsIsComponentsV2,
 		},
 	})
 	if err != nil {

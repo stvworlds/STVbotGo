@@ -1,7 +1,7 @@
 package ticketsInteraction
 
 import (
-	"STVbotGo/internal/handlers/tickets/ticketsOpenLogic"
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"fmt"
 	"log"
 
@@ -18,14 +18,15 @@ func TicketControlButtons(cfg config.Env) func(*discordgo.Session, *discordgo.In
 
 		data := i.MessageComponentData()
 		switch data.CustomID {
-		case ticketsOpenLogic.TicketAcceptButtonID:
-			handleTicketAccept(s, i, cfg)
-		case ticketsOpenLogic.TicketCloseButtonID:
+		// case ticketsOpenLogic.TicketAcceptButtonID:
+		//  handleTicketAccept(s, i, cfg)
+		case ticketsData.TicketCloseButtonID:
 			handleTicketClose(s, i, cfg)
 		}
 	}
 }
 
+/*
 func handleTicketAccept(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) {
 	if !canUseTicketControl(s, i, cfg.TicketAcceptRoleIDs) {
 		respondTicketControl(s, i, "❌ У вас немає прав прийняти тикет.", true)
@@ -34,14 +35,15 @@ func handleTicketAccept(s *discordgo.Session, i *discordgo.InteractionCreate, cf
 
 	respondTicketControl(s, i, fmt.Sprintf("✅ Тикет прийняв %s.", ticketActorMention(i)), false)
 }
+*/
 
 func handleTicketClose(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) {
 	if !canUseTicketControl(s, i, cfg.TicketCloseRoleIDs) {
-		respondTicketControl(s, i, "❌ У вас немає прав закрити тикет.", true)
+		respondTicketControl(s, i, "❌ У вас немає прав закрити цю заявку.", true)
 		return
 	}
 
-	respondTicketControl(s, i, fmt.Sprintf("🔒 Тикет закрив %s.", ticketActorMention(i)), false)
+	respondTicketControl(s, i, fmt.Sprintf("🔒 Заявку закрив %s.", ticketActorMention(i)), false)
 
 	if _, err := s.ChannelDelete(i.ChannelID); err != nil {
 		log.Printf("failed to close ticket channel %s: %v", i.ChannelID, err)

@@ -1,7 +1,7 @@
 package ticketsOpenLogic
 
 import (
-	"STVbotGo/internal/handlers/tickets/ticketsForms"
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"fmt"
 	"log"
 	"strings"
@@ -10,7 +10,7 @@ import (
 )
 
 type TicketCreateData struct {
-	Type    ticketsForms.TicketType
+	Type    ticketsData.TicketType
 	UserID  string
 	GuildID string
 	Fields  map[string]string
@@ -19,7 +19,7 @@ type TicketCreateData struct {
 func CreateTickets(s *discordgo.Session, i *discordgo.InteractionCreate, data TicketCreateData) {
 	logTicketCreateData(data)
 
-	channel, err := CreateTicketChannel(s, TicketChannelData{
+	channel, err := CreateTicketChannel(s, ticketsData.TicketChannelData{
 		Type:    data.Type,
 		UserID:  data.UserID,
 		GuildID: data.GuildID,
@@ -27,11 +27,11 @@ func CreateTickets(s *discordgo.Session, i *discordgo.InteractionCreate, data Ti
 	})
 	if err != nil {
 		log.Printf("failed to create %s ticket channel: %v", data.Type, err)
-		respondTicketCreateResult(s, i, "❌ Не вдалося створити канал тикета. Зверніться до адміністратора.")
+		respondTicketCreateResult(s, i, "❌ Не вдалося створити канал заявки. Напишіть лист до <support@stvworlds.win>.")
 		return
 	}
 
-	respondTicketCreateResult(s, i, buildTicketCreatedMessage(channel))
+	respondTicketCreateResult(s, i, fmt.Sprintf("✅ Заявку створено, <#%s>.", channel.ID))
 }
 
 func respondTicketCreateResult(s *discordgo.Session, i *discordgo.InteractionCreate, content string) {
@@ -61,8 +61,4 @@ func logTicketCreateData(data TicketCreateData) {
 		data.GuildID,
 		strings.Join(fields, " "),
 	)
-}
-
-func buildTicketCreatedMessage(channel *discordgo.Channel) string {
-	return fmt.Sprintf("✅ Ваше звернення отримано. Канал тикета створено: <#%s>", channel.ID)
 }

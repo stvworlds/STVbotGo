@@ -1,6 +1,7 @@
 package ticketsInteraction
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/handlers/tickets/ticketsForms"
 	"STVbotGo/internal/handlers/tickets/ticketsOpenLogic"
 
@@ -37,11 +38,11 @@ func isTicketModalID(customID string) bool {
 		strings.HasSuffix(customID, ticketsForms.TicketModalSuffix)
 }
 
-func extractTicketTypeFromModalID(customID string) ticketsForms.TicketType {
+func extractTicketTypeFromModalID(customID string) ticketsData.TicketType {
 	ticketType := strings.TrimPrefix(customID, ticketsForms.TicketModalPrefix)
 	ticketType = strings.TrimSuffix(ticketType, ticketsForms.TicketModalSuffix)
 
-	return ticketsForms.TicketType(ticketType)
+	return ticketsData.TicketType(ticketType)
 }
 
 func getModalValues(i *discordgo.InteractionCreate) map[string]string {

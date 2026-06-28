@@ -1,6 +1,7 @@
 package ticketsForms
 
 import (
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -13,35 +14,11 @@ const (
 	TicketButtonPrefix = "stv_tickets_open_"
 )
 
-type TicketType string
-
-const (
-	TicketSupport     TicketType = "support"
-	TicketAdminReport TicketType = "admin-report"
-	TicketUserReport  TicketType = "user-report"
-	TicketMessage     TicketType = "message"
-)
-
-type ModalField struct {
-	CustomID    string
-	Label       string
-	Style       discordgo.TextInputStyle
-	Placeholder string
-	Required    bool
-	MaxLength   int
-}
-
-type TicketFormConfig struct {
-	Type   TicketType
-	Title  string
-	Fields []ModalField
-}
-
-var ticketForms = map[TicketType]TicketFormConfig{
-	TicketSupport: {
-		Type:  TicketSupport,
+var ticketForms = map[ticketsData.TicketType]ticketsData.TicketFormConfig{
+	ticketsData.TicketSupport: {
+		Type:  ticketsData.TicketSupport,
 		Title: "Звернення до підтримки",
-		Fields: []ModalField{
+		Fields: []ticketsData.ModalField{
 			{
 				CustomID:    "topic",
 				Label:       "Тема звернення",
@@ -60,10 +37,10 @@ var ticketForms = map[TicketType]TicketFormConfig{
 			},
 		},
 	},
-	TicketAdminReport: {
-		Type:  TicketAdminReport,
+	ticketsData.TicketAdminReport: {
+		Type:  ticketsData.TicketAdminReport,
 		Title: "Скарга на адміністрацію",
-		Fields: []ModalField{
+		Fields: []ticketsData.ModalField{
 			{
 				CustomID:    "topic",
 				Label:       "Тема скарги",
@@ -82,10 +59,10 @@ var ticketForms = map[TicketType]TicketFormConfig{
 			},
 		},
 	},
-	TicketUserReport: {
-		Type:  TicketUserReport,
+	ticketsData.TicketUserReport: {
+		Type:  ticketsData.TicketUserReport,
 		Title: "Скарга на гравця",
-		Fields: []ModalField{
+		Fields: []ticketsData.ModalField{
 			{
 				CustomID:    "topic",
 				Label:       "Тема скарги",
@@ -104,10 +81,10 @@ var ticketForms = map[TicketType]TicketFormConfig{
 			},
 		},
 	},
-	TicketMessage: {
-		Type:  TicketMessage,
+	ticketsData.TicketMessage: {
+		Type:  ticketsData.TicketMessage,
 		Title: "Повідомлення дла адміністрації",
-		Fields: []ModalField{
+		Fields: []ticketsData.ModalField{
 			{
 				CustomID:    "topic",
 				Label:       "Тема повідомлення",
@@ -128,20 +105,20 @@ var ticketForms = map[TicketType]TicketFormConfig{
 	},
 }
 
-func ModalID(ticketType TicketType) string {
+func ModalID(ticketType ticketsData.TicketType) string {
 	return TicketModalPrefix + string(ticketType) + TicketModalSuffix
 }
 
-func ButtonID(ticketType TicketType) string {
+func ButtonID(ticketType ticketsData.TicketType) string {
 	return TicketButtonPrefix + string(ticketType)
 }
 
-func IsKnownForm(ticketType TicketType) bool {
+func IsKnownForm(ticketType ticketsData.TicketType) bool {
 	_, ok := ticketForms[ticketType]
 	return ok
 }
 
-func OpenTicketForm(s *discordgo.Session, i *discordgo.InteractionCreate, ticketType TicketType) {
+func OpenTicketForm(s *discordgo.Session, i *discordgo.InteractionCreate, ticketType ticketsData.TicketType) {
 	form, ok := ticketForms[ticketType]
 	if !ok {
 		log.Printf("unknown ticket form type: %s", ticketType)
@@ -161,7 +138,7 @@ func OpenTicketForm(s *discordgo.Session, i *discordgo.InteractionCreate, ticket
 	}
 }
 
-func buildModalComponents(fields []ModalField) []discordgo.MessageComponent {
+func buildModalComponents(fields []ticketsData.ModalField) []discordgo.MessageComponent {
 	components := make([]discordgo.MessageComponent, 0, len(fields))
 
 	for _, field := range fields {
