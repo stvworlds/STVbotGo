@@ -51,7 +51,7 @@ func OpenMessageComponents() []discordgo.MessageComponent {
 								{
 									Label:       "Скарга на гравця",
 									Description: "Повідом про порушення, конфлікти або підозрілу поведінку.",
-									Value:       "admin-report",
+									Value:       "user-report",
 									Emoji: &discordgo.ComponentEmoji{
 										Name: "🎰",
 									},
@@ -59,7 +59,7 @@ func OpenMessageComponents() []discordgo.MessageComponent {
 								{
 									Label:       "Скарга на адміністрацію",
 									Description: "Повідомити про порушення, надмірність або неправильну поведінку адміністрації.",
-									Value:       "user-report",
+									Value:       "admin-report",
 									Emoji: &discordgo.ComponentEmoji{
 										Name: "☠️",
 									},
