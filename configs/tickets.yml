@@ -1,0 +1,172 @@
+ticket_settings:
+  default_category_id: "1522714723974647818"
+  default_channel_name: "[🎰]-{username}"
+  archive_category_id: ""
+  log_channel_id: ""
+  default_staff_roles: []
+  default_buttons:
+    - id: "close"
+      label: "Закрити"
+      style: "danger"
+      emoji: "🔒"
+
+tickets:
+  support:
+    title: "Підтримка"
+    category_id: "1522714723974647818"
+    channel_name: "[🛟]-{username}"
+    modal:
+      fields:
+        - id: "topic"
+          label: "Тема звернення"
+          style: "short"
+          placeholder: "Наприклад: проблема з входом на сервер"
+          required: true
+          max_length: 100
+        - id: "description"
+          label: "Опишіть проблему"
+          style: "paragraph"
+          placeholder: "Опишіть вашу проблему якомога детальніше"
+          required: true
+          max_length: 1000
+    message:
+      ping: "@everyone"
+      header: |
+        ## 🛟 Підтримка
+        > **Заявник:** {user_mention}
+        > **Час відкриття:** <t:{timestamp}:R>
+      description: |
+        > **Тема:** {topic}
+
+        > **Опис:**
+        {description}
+      color: "5865F2"
+    buttons:
+      - id: "close"
+        label: "Закрити"
+        style: "danger"
+        emoji: "🔒"
+
+  admin-report:
+    title: "Скарга на адміністрацію"
+    category_id: "1522714788038181015"
+    channel_name: "admin-report-{username}"
+    modal:
+      fields:
+        - id: "topic"
+          label: "Тема скарги"
+          style: "short"
+          placeholder: "Наприклад: перевищення обов'язків адміністратором"
+          required: true
+          max_length: 100
+        - id: "name"
+          label: "Адміністратор"
+          style: "short"
+          placeholder: "Нікнейм адміністратора"
+          required: false
+          max_length: 32
+        - id: "description"
+          label: "Опишіть скаргу"
+          style: "paragraph"
+          placeholder: "Опишіть вашу скаргу якомога детальніше"
+          required: true
+          max_length: 1000
+    message:
+      ping: "@everyone"
+      header: |
+        ## 🎰 Скарга на адміністрацію
+        > **Заявник:** {user_mention}
+        > **Час відкриття:** <t:{timestamp}:R>
+      description: |
+        > **Тема:** {topic}
+
+        > **Адміністратор:** {name}
+
+        > **Опис:**
+        {description}
+      color: "FF0000"
+    buttons:
+      - id: "close"
+        label: "Закрити"
+        style: "danger"
+        emoji: "🔒"
+
+  user-report:
+    title: "Скарга на гравця"
+    category_id: "1522714817591382137"
+    channel_name: "user-report-{username}}"
+    modal:
+      fields:
+        - id: "topic"
+          label: "Тема скарги"
+          style: "short"
+          placeholder: "Наприклад: образи від іншого гравця в вашу сторону"
+          required: true
+          max_length: 100
+        - id: "description"
+          label: "Опишіть скаргу"
+          style: "paragraph"
+          placeholder: "Опишіть вашу скаргу якомога детальніше"
+          required: true
+          max_length: 1000
+    message:
+      ping: "@everyone"
+      header: |
+        ## 🎰 Скарга на гравця
+        > **Заявник:** {user_mention}
+        > **Час відкриття:** <t:{timestamp}:R>
+      description: |
+        > **Тема:** {topic}
+
+        > **Опис:**
+        {description}
+      color: "FFA500"
+    buttons:
+      - id: "close"
+        label: "Закрити"
+        style: "danger"
+        emoji: "🔒"
+
+  message:
+    title: "Повідомлення до адміністрації"
+    category_id: "1522714741280079993"
+    channel_name: "message-{username}"
+    modal:
+      fields:
+        - id: "topic"
+          label: "Тема повідомлення"
+          style: "short"
+          placeholder: "Наприклад: ідея для нового івенту."
+          required: true
+          max_length: 100
+        - id: "name"
+          label: "Адміністратор"
+          style: "short"
+          placeholder: "Нікнейм гравця"
+          required: false
+          max_length: 32
+        - id: "description"
+          label: "Опишіть повідомлення"
+          style: "paragraph"
+          placeholder: "Опишіть ваше повідомлення якомога детальніше"
+          required: true
+          max_length: 1000
+    message:
+      ping: "@everyone"
+      header: |
+        ## Повідомлення до адміністрації
+        > **Заявник:** {user_mention}
+        > **Час відкриття:** <t:{timestamp}:R>
+      description: |
+        > **Тема:** {topic}
+        
+        > **Порушник:** {name}
+        
+        > **Повідомлення:**
+        {description}
+      color: "57F287"
+    buttons:
+      - id: "close"
+        label: "Закрити"
+        style: "danger"
+        emoji: "🔒"
