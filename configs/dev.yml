@@ -17,13 +17,3 @@ scamChannelID: "1510035959033499709"
 actionsLogChannelID: "1385289387557916785"
 
 appLogChannelID: "1503789961781051443"
-
-ticketCloseRoleIDs:
-  - "11111"
-  - "0000"
-
-ticketAcceptRoleIDs:
-  - "11111"
-  - "0000"
-
-ticketsConfigPath: "configs/tickets.yml"
