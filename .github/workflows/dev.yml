@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  IMAGE_NAME: ghcr.io/stevious-xyz/stvbotgo
+  IMAGE_NAME: ghcr.io/stvworlds/stvbotgo
   IMAGE_TAG: dev
 
 jobs:
