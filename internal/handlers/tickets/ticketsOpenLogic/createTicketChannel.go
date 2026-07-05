@@ -2,11 +2,11 @@ package ticketsOpenLogic
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
-	"STVbotGo/internal/handlers/tickets/ticketsMessages"
 	"fmt"
 	"log"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -20,14 +20,28 @@ func CreateTicketChannel(s *discordgo.Session, data ticketsData.TicketChannelDat
 		return nil, fmt.Errorf("ticket user ID is empty")
 	}
 
+	cfg, ok := ticketsData.Config.Resolve(data.Type)
+	if !ok {
+		return nil, fmt.Errorf("unknown ticket type: %s", data.Type)
+	}
+
 	overwrites, err := ticketPermissionOverwrites(s, data.GuildID, data.UserID)
 	if err != nil {
 		return nil, err
 	}
 
+	username := sanitizeChannelName(ticketCreatorName(s, data.GuildID, data.UserID))
+	if username == "" {
+		username = "user"
+	}
+
+	templateVars := buildTemplateVars(data, username)
+	channelName := sanitizeChannelName(ticketsData.RenderTemplate(cfg.ChannelName, templateVars))
+
 	channel, err := s.GuildChannelCreateComplex(data.GuildID, discordgo.GuildChannelCreateData{
-		Name:                 ticketChannelName(s, data),
+		Name:                 channelName,
 		Type:                 discordgo.ChannelTypeGuildText,
+		ParentID:             cfg.CategoryID,
 		PermissionOverwrites: overwrites,
 		Topic:                fmt.Sprintf("Ticket %s | User ID: %s", data.Type, data.UserID),
 	})
@@ -35,10 +49,12 @@ func CreateTicketChannel(s *discordgo.Session, data ticketsData.TicketChannelDat
 		return nil, fmt.Errorf("create ticket channel: %w", err)
 	}
 
+	avatarURL := ticketCreatorAvatar(s, data.GuildID, data.UserID)
+	components := ticketsData.BuildTicketMessage(cfg.Message, cfg.Buttons, templateVars, avatarURL)
 	if _, err = s.ChannelMessageSendComplex(
 		channel.ID,
 		&discordgo.MessageSend{
-			Components: ticketsMessages.OpenTicketMessageComponents(data),
+			Components: components,
 			Flags:      ticketsData.MessageFlagsIsComponentsV2,
 		},
 	); err != nil {
@@ -46,6 +62,21 @@ func CreateTicketChannel(s *discordgo.Session, data ticketsData.TicketChannelDat
 	}
 
 	return channel, nil
+}
+
+func buildTemplateVars(data ticketsData.TicketChannelData, username string) map[string]string {
+	vars := map[string]string{
+		"user_id":      data.UserID,
+		"username":     username,
+		"user_mention": fmt.Sprintf("<@%s>", data.UserID),
+		"guild_id":     data.GuildID,
+		"ticket_type":  data.Type,
+		"timestamp":    fmt.Sprintf("%d", time.Now().Unix()),
+	}
+	for k, v := range data.Fields {
+		vars[k] = v
+	}
+	return vars
 }
 
 func ticketPermissionOverwrites(s *discordgo.Session, guildID string, userID string) ([]*discordgo.PermissionOverwrite, error) {
@@ -102,19 +133,18 @@ func ticketPermissionOverwrites(s *discordgo.Session, guildID string, userID str
 	return overwrites, nil
 }
 
-func ticketChannelName(s *discordgo.Session, data ticketsData.TicketChannelData) string {
-
-	username := sanitizeChannelName(ticketCreatorName(s, data.GuildID, data.UserID))
-	if username == "" {
-		username = "user"
+func ticketCreatorAvatar(s *discordgo.Session, guildID string, userID string) string {
+	member, err := s.GuildMember(guildID, userID)
+	if err == nil && member != nil && member.User != nil {
+		return member.User.AvatarURL("256")
 	}
 
-	ticketType := sanitizeChannelName(string(data.Type))
-	if ticketType == "" {
-		ticketType = "Невідомо"
+	user, err := s.User(userID)
+	if err == nil && user != nil {
+		return user.AvatarURL("256")
 	}
 
-	return fmt.Sprintf("-%s-%s", username, ticketType)
+	return ""
 }
 
 func ticketCreatorName(s *discordgo.Session, guildID string, userID string) string {

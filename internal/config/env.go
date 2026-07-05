@@ -23,6 +23,7 @@ type Env struct {
 	ActionsLogChannelID string   `yaml:"actionsLogChannelID"`
 	TicketCloseRoleIDs  []string `yaml:"ticketCloseRoleIDs"`
 	TicketAcceptRoleIDs []string `yaml:"ticketAcceptRoleIDs"`
+	TicketsConfigPath   string   `yaml:"ticketsConfigPath"`
 }
 
 func Load() (Env, error) {

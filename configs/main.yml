@@ -19,3 +19,5 @@ scamChannelID: "1475173067679465832"
 actionsLogChannelID: "1443851838565646407"
 
 appLogChannelID: "1441126594080018613"
+
+ticketsConfigPath: "/configs/main-tickets.yml"

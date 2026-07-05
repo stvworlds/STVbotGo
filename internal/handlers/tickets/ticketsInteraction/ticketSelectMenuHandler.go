@@ -24,10 +24,13 @@ func TicketSelectMenu(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	selected := i.MessageComponentData().Values[0]
 	var response []discordgo.MessageComponent
 
-	switch selected {
-	case "support", "admin-report", "user-report", "message":
-		response = ticketsMessages.OpenBottonComponents(selected)
-	default:
+	if ticketsData.Config != nil {
+		if _, ok := ticketsData.Config.Tickets[selected]; ok {
+			response = ticketsMessages.OpenBottonComponents(selected)
+		} else {
+			response = ticketsMessages.DefaultErrorComponents()
+		}
+	} else {
 		response = ticketsMessages.DefaultErrorComponents()
 	}
 

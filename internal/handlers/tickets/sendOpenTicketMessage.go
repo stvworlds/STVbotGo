@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	channel                                           = "1501678737836736694"
+	channel                                           = "1395637822110695476"
 	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
 )
 

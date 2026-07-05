@@ -7,27 +7,23 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var ticketTypeTexts = map[ticketsData.TicketType]string{
-	ticketsData.TicketSupport:     "🛟 Ви обрали категорію **Підтримка**.\n> Натисніть кнопку нижче, щоб відкрити форму звернення до підтримки.",
-	ticketsData.TicketAdminReport: "🎰 Ви обрали категорію **Скарга на адміністрацію**.\n> Натисніть кнопку нижче, щоб описати ситуацію.",
-	ticketsData.TicketUserReport:  "☠️ Ви обрали категорію **Скарга на гравця**.\n> Натисніть кнопку нижче, щоб подати скаргу.",
-	ticketsData.TicketMessage:     "📝 Ви обрали категорію **Повідомлення**.\n> Натисніть кнопку нижче, щоб залишити повідомлення адміністрації.",
-}
-
 func OpenBottonComponents(mtype string) []discordgo.MessageComponent {
-	ticketType := ticketsData.TicketType(mtype)
+	title := "Натисніть кнопку, щоб відкрити форму подачі заявки."
 
-	text, ok := ticketTypeTexts[ticketType]
-	if !ok {
-		text = "Натисніть кнопку, щоб відкрити форму подачі заявки."
+	if ticketsData.Config != nil {
+		if cfg, ok := ticketsData.Config.Tickets[mtype]; ok && cfg.Title != "" {
+			title = "Ви обрали категорію **" + cfg.Title + "**.\n> Натисніть кнопку нижче, щоб відкрити форму."
+		}
 	}
+
+	ticketType := mtype
 
 	return []discordgo.MessageComponent{
 		discordgo.Container{
 			Components: []discordgo.MessageComponent{
 
 				discordgo.TextDisplay{
-					Content: text,
+					Content: title,
 				},
 
 				discordgo.ActionsRow{

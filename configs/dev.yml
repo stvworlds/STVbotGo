@@ -25,3 +25,5 @@ ticketCloseRoleIDs:
 ticketAcceptRoleIDs:
   - "11111"
   - "0000"
+
+ticketsConfigPath: "configs/tickets.yml"
