@@ -21,6 +21,9 @@ type Env struct {
 	ScamChannelID       string   `yaml:"scamChannelID"`
 	AppLogChannelID     string   `yaml:"appLogChannelID"`
 	ActionsLogChannelID string   `yaml:"actionsLogChannelID"`
+	TicketCloseRoleIDs  []string `yaml:"ticketCloseRoleIDs"`
+	TicketAcceptRoleIDs []string `yaml:"ticketAcceptRoleIDs"`
+	TicketsConfigPath   string   `yaml:"ticketsConfigPath"`
 }
 
 func Load() (Env, error) {
