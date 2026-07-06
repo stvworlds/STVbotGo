@@ -12,7 +12,7 @@ func (h *readyHandler) onReady(s *discordgo.Session, _ *discordgo.Ready) {
 		return
 	}
 
-	if _, err := s.ChannelMessageSend(h.startupChannelID, "✅ Бот увімкнувся та готовий до роботи"); err != nil {
+	if _, err := s.ChannelMessageSend(h.startupChannelID, "✅ Бот увімкнувся та готовий до роботи !"); err != nil {
 		log.Printf("failed to send startup message: %v", err)
 	}
 }
