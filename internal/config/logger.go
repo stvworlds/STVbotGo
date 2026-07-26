@@ -1,10 +1,13 @@
 package config
 
-import "log"
+import (
+	"log"
+)
 
 const prefix = "STVbotGo: "
 
-func Logger() {
+func Logger(cfg Env) {
 	log.SetPrefix(prefix)
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 }

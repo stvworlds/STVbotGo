@@ -32,3 +32,16 @@ func RegisterAll(s *discordgo.Session, cfg config.Env) {
 	tickets.Register(s, cfg)
 	log.Println("Handlers are now loaded.")
 }
+
+func RegisterCommands(s *discordgo.Session, applicationID string) {
+	if err := ping.RegisterCommand(s, applicationID); err != nil {
+		log.Printf("failed to register /ping command: %v", err)
+	}
+	if err := convert.RegisterCommand(s, applicationID); err != nil {
+		log.Printf("failed to register /convert command: %v", err)
+	}
+	if err := newscreate.RegisterCommand(s, applicationID); err != nil {
+		log.Printf("failed to register /create-news command: %v", err)
+	}
+	log.Println("Commands registered")
+}

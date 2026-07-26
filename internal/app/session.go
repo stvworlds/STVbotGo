@@ -1,4 +1,4 @@
-package utils
+package app
 
 import (
 	"log"
@@ -9,7 +9,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func NewSession(token string, cfg config.Env) (*discordgo.Session, error) {
+func session(token string, cfg config.Env) (*discordgo.Session, error) {
 	session, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func NewSession(token string, cfg config.Env) (*discordgo.Session, error) {
 	session.Identify.Intents = discordgo.IntentsAll
 
 	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		RegisterCommands(s)
+		handlers.RegisterCommands(s, s.State.User.ID)
 	})
 
 	handlers.RegisterAll(session, cfg)
