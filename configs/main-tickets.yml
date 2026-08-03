@@ -11,6 +11,51 @@ ticket_settings:
       emoji: "🔒"
 
 tickets:
+  entrance:
+    title: "Отримання Прохідки"
+    categoty_id: "1533936473877774516"
+    channel_name: "[🔑]-{username}"
+    modal:
+      fields:
+        - id: "age"
+          label: "Ваш вік"
+          style: "short"
+          placeholder: "Приклад: 10 "
+          required: true
+          max_length: 3
+        - id: "description_about"
+          label: "Розкажіть про себе"
+          style: "paragraph"
+          placeholder: "Приклад: Мене звати ***** я займаюсь ****** добре розбираюсь ***** і тд... на ваш розсуд"
+          required: true
+          min_length: 20
+          max_length: 250
+        - id: "plan"
+          label: "Які у вас плани на сервер"
+          style: "paragraph"
+          placeholder: "Приклад: Хочу побудувати, знайти друзів і тд.."
+          required: true
+          min_length: 200
+          max_length: 1000
+    message:
+      ping: "@everyone"
+      header: |
+        ## 🔑 Прохідка
+        > **Заявник:** {user_mention}
+        > **Час відкриття:** <t:{timestamp}:R>
+      description: |
+        > **Вік:** {age}
+        > **Опис:**
+               {description_about}
+        > **Плани:**
+                {plan}
+      color: "5865F2"
+    buttons:
+      - id: "close"
+        label: "Закрити"
+        style: "danger"
+        emoji: "🔒"
+
   support:
     title: "Підтримка"
     category_id: "1523399433084211415"
