@@ -41,6 +41,14 @@ func OpenMessageComponents() []discordgo.MessageComponent {
 							Placeholder: "📩 Обери категорію в меню нижче",
 							Options: []discordgo.SelectMenuOption{
 								{
+									Label:       "Отримання прохідки",
+									Description: "Отримай доступ до ігровогу серверу",
+									Value:       "entrance",
+									Emoji: &discordgo.ComponentEmoji{
+										Name: "🔑",
+									},
+								},
+								{
 									Label:       "Підтримка",
 									Description: "Отримай допомогу з питаннями, багами або доступом.",
 									Value:       "support",
