@@ -18,6 +18,7 @@ func BuildModalComponents(fields []TicketModalField) []discordgo.MessageComponen
 					Style:       parseTextInputStyle(field.Style),
 					Placeholder: field.Placeholder,
 					Required:    field.Required,
+					MinLength:   field.MinLength,
 					MaxLength:   field.MaxLength,
 				},
 			},
