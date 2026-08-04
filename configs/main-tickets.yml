@@ -13,14 +13,14 @@ ticket_settings:
 tickets:
   entrance:
     title: "Отримання Прохідки"
-    categoty_id: "1533936473877774516"
+    category_id: "1533936473877774516"
     channel_name: "[🔑]-{username}"
     modal:
       fields:
         - id: "age"
           label: "Ваш вік"
           style: "short"
-          placeholder: "Приклад: 10 "
+          placeholder: "Приклад: 17 "
           required: true
           max_length: 3
         - id: "description_about"
@@ -33,7 +33,7 @@ tickets:
         - id: "plan"
           label: "Які у вас плани на сервер"
           style: "paragraph"
-          placeholder: "Приклад: Хочу побудувати, знайти друзів і тд.."
+          placeholder: "Приклад: Хочу побудувати ***, знайти друзів і тд."
           required: true
           min_length: 200
           max_length: 1000
@@ -43,12 +43,13 @@ tickets:
         ## 🔑 Прохідка
         > **Заявник:** {user_mention}
         > **Час відкриття:** <t:{timestamp}:R>
+        Зверніть увагу! Для отримання прохідки у вас вже має бути створена аккаунт на [сайті](https://stvworlds.win/auth/login).
       description: |
         > **Вік:** {age}
         > **Опис:**
-               {description_about}
+        {description_about}
         > **Плани:**
-                {plan}
+        {plan}
       color: "5865F2"
     buttons:
       - id: "close"
