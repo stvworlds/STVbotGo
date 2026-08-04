@@ -17,7 +17,10 @@ func commandWhitelist(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if i.GuildID != "1335083670364618772" {
 		return
 	}
-	permissions, err := s.UserChannelPermissions(i.User.ID, i.ChannelID)
+	if i.Member == nil {
+		return
+	}
+	permissions, err := s.UserChannelPermissions(i.Member.User.ID, i.ChannelID)
 	if err != nil {
 		return
 	}
