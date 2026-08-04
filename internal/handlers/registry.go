@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"STVbotGo/internal/handlers/tickets"
+	"STVbotGo/internal/handlers/whitelist"
 	"log"
 
 	"STVbotGo/internal/config"
@@ -30,6 +31,8 @@ func RegisterAll(s *discordgo.Session, cfg config.Env) {
 	joinmessage.Register(s, cfg)
 	readymessage.Register(s, cfg)
 	tickets.Register(s, cfg)
+
+	whitelist.Register(s)
 	log.Println("Handlers are now loaded.")
 }
 
@@ -42,6 +45,9 @@ func RegisterCommands(s *discordgo.Session, applicationID string) {
 	}
 	if err := newscreate.RegisterCommand(s, applicationID); err != nil {
 		log.Printf("failed to register /create-news command: %v", err)
+	}
+	if err := whitelist.RegisterCommand(s, applicationID); err != nil {
+		log.Printf("failed to register whitelist command: %v", err)
 	}
 	log.Println("Commands registered")
 }
