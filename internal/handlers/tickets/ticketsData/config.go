@@ -34,6 +34,7 @@ type TicketModalField struct {
 	Style       string `yaml:"style"`
 	Placeholder string `yaml:"placeholder"`
 	Required    bool   `yaml:"required"`
+	MinLength   int    `yaml:"min_length"`
 	MaxLength   int    `yaml:"max_length"`
 }
 
