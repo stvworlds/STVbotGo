@@ -13,6 +13,14 @@ env:
   IMAGE_TAG: main
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show ref
+        run: |
+          echo "REF=${GITHUB_REF}"
+          echo "BRANCH=${GITHUB_REF_NAME}"
+
   build:
     runs-on: ubuntu-latest
 
