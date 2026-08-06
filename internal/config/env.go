@@ -11,13 +11,13 @@ import (
 
 type Env struct {
 	Token               string   `yaml:"token"`
+	ApiKey              string   `yaml:"apiKey"`
 	Environment         string   `yaml:"environment"`
 	StartupChannelID    string   `yaml:"startupChannelID"`
 	NewsChannels        []string `yaml:"newsChannels"`
 	UserNewsChannel     string   `yaml:"userNewsChannel"`
 	NewsGuildID         string   `yaml:"newsGuildID"`
 	NewsRoleID          string   `yaml:"newsRoleID"`
-	BlogAPIKey          string   `yaml:"blogAPIKey"`
 	ScamChannelID       string   `yaml:"scamChannelID"`
 	AppLogChannelID     string   `yaml:"appLogChannelID"`
 	ActionsLogChannelID string   `yaml:"actionsLogChannelID"`
@@ -84,7 +84,7 @@ func applyEnvOverrides(env *Env) {
 		env.Environment = environment
 	}
 
-	if blogAPIKey := os.Getenv("BLOG_API_KEY"); blogAPIKey != "" {
-		env.BlogAPIKey = blogAPIKey
+	if apiKey := os.Getenv("API_KEY"); apiKey != "" {
+		env.ApiKey = apiKey
 	}
 }

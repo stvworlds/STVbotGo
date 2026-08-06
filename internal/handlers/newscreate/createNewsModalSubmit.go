@@ -24,7 +24,7 @@ func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionC
 		return
 	}
 
-	if cfg.BlogAPIKey == "" {
+	if cfg.ApiKey == "" {
 		respondEphemeral(s, i, "❌ API ключ для створення новин не налаштований.")
 		return
 	}
@@ -58,7 +58,7 @@ func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionC
 		return
 	}
 
-	responseBody, newsID, err := createNews(news, cfg.BlogAPIKey)
+	responseBody, newsID, err := createNews(news, cfg.ApiKey)
 	if err != nil {
 		log.Printf("failed to create news: %v", err)
 		respondEphemeral(s, i, fmt.Sprintf("❌ Не вдалося створити новину: %v", err))
