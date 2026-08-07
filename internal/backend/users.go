@@ -19,7 +19,7 @@ func (c *Client) FindUserByUsername(
 	username string,
 ) (*User, error) {
 
-	u, err := url.Parse(c.baseURL + "/user/find/username")
+	u, err := url.Parse(c.baseURL + "/user/find/nickname")
 	if err != nil {
 		return nil, err
 	}
