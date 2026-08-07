@@ -51,7 +51,7 @@ func (c *Client) FindUserByUsername(
 	}()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("backend returned status: %d", resp.StatusCode)
+		return nil, fmt.Errorf("backend returned status: %d, req: %v, req: %v, header: %v", resp.StatusCode, req.Body, req.Header, req.URL)
 	}
 
 	var user User
