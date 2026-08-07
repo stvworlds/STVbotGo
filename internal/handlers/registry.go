@@ -32,7 +32,7 @@ func RegisterAll(s *discordgo.Session, cfg config.Env) {
 	readymessage.Register(s, cfg)
 	tickets.Register(s, cfg)
 
-	whitelist.Register(s)
+	whitelist.Register(s, cfg)
 	log.Println("Handlers are now loaded.")
 }
 

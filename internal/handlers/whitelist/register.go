@@ -1,11 +1,15 @@
 package whitelist
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"STVbotGo/internal/config"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 const commandName = "whitelist"
 
-func Register(s *discordgo.Session) {
-	s.AddHandler(commandWhitelist)
+func Register(s *discordgo.Session, cfg config.Env) {
+	s.AddHandler(command(cfg))
 }
 
 func RegisterCommand(s *discordgo.Session, applicationID string) error {
