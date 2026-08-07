@@ -52,7 +52,7 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	userID := options[0].UserValue(s).ID
 
 	client := backend.NewClient(
-		"https://api.stbworlds.win",
+		"https://api.stvworlds.win",
 		cfg.ApiKey,
 	)
 
