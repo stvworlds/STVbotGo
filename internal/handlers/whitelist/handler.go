@@ -49,14 +49,14 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	userID := options[0].UserValue(s).ID
+	Username := options[0].UserValue(s).Username
 
 	client := backend.NewClient(
 		"https://api.stvworlds.win",
 		cfg.ApiKey,
 	)
 
-	user, err := client.FindUserByUsername(ctx, userID)
+	user, err := client.FindUserByUsername(ctx, Username)
 	if err != nil {
 		log.Printf("failed to find user by username: %v", err)
 		return
