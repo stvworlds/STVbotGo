@@ -34,7 +34,6 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	if err != nil {
 		return
 	}
-
 	if permissions&discordgo.PermissionAdministrator == 0 {
 		return
 	}
@@ -46,25 +45,28 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 		content = fmt.Sprintf("Не достатньо аргументів.")
 		return
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
-	username := options[0].UserValue(s).Username
 
 	client := backend.NewClient(
 		"https://api.stvworlds.win",
 		cfg.ApiKey,
 	)
 
+	argument := options[0].UserValue(s)
+
 	var user *backend.User
-	user, err = client.FindUserByUsername(ctx, username)
+	user, err = client.FindUserByUsername(ctx, argument.Username)
 	if err != nil {
 		content = fmt.Sprintf("Не вдалося знайти користувача. %v", err)
 
+	} else if contains(user.Roles, "PLAYER") {
+		content = fmt.Sprintf("%v вже має роль гравця", argument.Mention())
 	} else {
-		content = fmt.Sprintf("Bebra %v", user.ID)
-	}
 
+		content = fmt.Sprintf("%v доданий до гравців", argument.Mention())
+	}
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{Content: content},
@@ -72,4 +74,13 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	if err != nil {
 		log.Printf("failed to respond to /whitelist command: %v", err)
 	}
+}
+
+func contains[T comparable](slice []T, value T) bool {
+	for _, item := range slice {
+		if item == value {
+			return true
+		}
+	}
+	return false
 }
