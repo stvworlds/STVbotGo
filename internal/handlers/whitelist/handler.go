@@ -63,7 +63,7 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 		content = fmt.Sprintf("Не вдалося знайти користувача. %v", err)
 
 	} else {
-		content = fmt.Sprintf("Bebra %c", user.ID)
+		content = fmt.Sprintf("Bebra %v", user.ID)
 	}
 
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
