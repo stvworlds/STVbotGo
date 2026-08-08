@@ -10,8 +10,14 @@ import (
 )
 
 type User struct {
-	ID        int64  `json:"id"`
-	DiscordID string `json:"username"`
+	ID         int      `json:"id"`
+	DiscordID  string   `json:"discordID"`
+	Username   string   `json:"username"`
+	Email      string   `json:"email"`
+	Roles      []string `json:"roles"`
+	UUIDMC     string   `json:"uuidMC"`
+	NicknameMC string   `json:"nicknameMC"`
+	CreatedAt  string   `json:"createdAt"`
 }
 
 func (c *Client) FindUserByUsername(
@@ -50,15 +56,16 @@ func (c *Client) FindUserByUsername(
 		}
 	}()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("backend returned status: %d, req: %v, req: %v, header: %v", resp.StatusCode, req.Body, req.Header, req.URL)
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var user User
+		if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+			return nil, err
+		}
+		return &user, nil
+	case http.StatusNotFound:
+		return nil, fmt.Errorf("user not found")
+	default:
+		return nil, fmt.Errorf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
 	}
-
-	var user User
-
-	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
-		return nil, err
-	}
-
-	return &user, nil
 }
