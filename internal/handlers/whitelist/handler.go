@@ -59,7 +59,6 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	var user *backend.User
 	user, err = client.FindUserByUsername(ctx, username)
 	if err != nil {
-		log.Printf("failed to find user by username: %v", err)
 		content = fmt.Sprintf("Не вдалося знайти користувача. %v", err)
 
 	} else {

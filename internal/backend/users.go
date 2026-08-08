@@ -66,6 +66,7 @@ func (c *Client) FindUserByUsername(
 	case http.StatusNotFound:
 		return nil, fmt.Errorf("user not found")
 	default:
+		log.Printf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
 		return nil, fmt.Errorf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
 	}
 }
