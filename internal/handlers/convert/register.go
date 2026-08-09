@@ -4,7 +4,7 @@ import "github.com/bwmarrin/discordgo"
 
 const (
 	convertCommandName = "convert"
-	filterComplex      = "[0:v]fps=15,scale=360:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=sierra2_4a:diff_mode=rectangle"
+	filterComplex      = "[0:v]fps=18,scale=400:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=sierra2_4a:diff_mode=rectangle"
 )
 
 func Register(s *discordgo.Session) {
