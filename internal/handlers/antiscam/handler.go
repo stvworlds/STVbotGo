@@ -1,12 +1,13 @@
 package antiscam
 
 import (
+	"STVbotGo/internal/utils"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func (h *cfg) antiSpam(s *discordgo.Session, m *discordgo.MessageCreate) {
+func (h *cfg) antiScam(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	banStatus := "Unknown"
 	messageStatus := "Unknown"
@@ -46,7 +47,7 @@ func (h *cfg) antiSpam(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Printf("Failed to send DM to user %s: %v", m.Author.ID, err)
 	}
 
-	if err := banUser(s, m); err != nil {
+	if err := utils.UserBan(m.GuildID, m.Author.ID, s, deleteMessageSeconds, "Anti-scam triggered"); err != nil {
 		banStatus = "Failed"
 
 		if deleteMessageErr := s.ChannelMessageDelete(message.ChannelID, message.ID); deleteMessageErr != nil {
@@ -59,6 +60,7 @@ func (h *cfg) antiSpam(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	} else {
 		banStatus = "Success"
+		messageStatus = "Sent"
 	}
 
 	sendAdminMessage(s, m, h.ActionsLogChannelID, banStatus, messageStatus)

@@ -6,28 +6,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func banUser(s *discordgo.Session, m *discordgo.MessageCreate) error {
-	data := struct {
-		DeleteMessageSeconds int `json:"delete_message_seconds"`
-	}{
-		DeleteMessageSeconds: deleteMessageSeconds,
-	}
-
-	_, err := s.RequestWithBucketID(
-		"PUT",
-		discordgo.EndpointGuildBan(m.GuildID, m.Author.ID),
-		data,
-		discordgo.EndpointGuildBan(m.GuildID, ""),
-		discordgo.WithAuditLogReason("Anti-scam triggered"),
-	)
-	if err != nil {
-		log.Printf("Failed to ban user for anti-scam: %v", err)
-		return err
-	}
-
-	return nil
-}
-
 func sendAdminMessage(s *discordgo.Session, m *discordgo.MessageCreate, channel string, banStatus string, messageStatus string) {
 
 	bottonDisabled := false
