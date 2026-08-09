@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 type User struct {
@@ -35,27 +37,16 @@ func (c *Client) FindUserByUsername(
 	q.Set("username", username)
 	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequestWithContext(
-		ctx,
-		http.MethodGet,
-		u.String(),
-		nil,
-	)
+	resp, err := c.Request(ctx, u, http.MethodGet)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Set("X-API-KEY", c.apiKey)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
 			log.Println(err)
 		}
-	}()
+	}(resp.Body)
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -67,8 +58,14 @@ func (c *Client) FindUserByUsername(
 	case http.StatusNotFound:
 		return nil, fmt.Errorf("user not found")
 	default:
-		log.Printf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
-		return nil, fmt.Errorf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
+		body, _ := io.ReadAll(resp.Body)
+		apiError := fmt.Errorf(
+			"backend returned status %d: %s",
+			resp.StatusCode,
+			strings.TrimSpace(string(body)))
+
+		log.Println(apiError)
+		return nil, apiError
 	}
 }
 
@@ -87,25 +84,16 @@ func (c *Client) AddRole(
 	q.Set("role", role)
 	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequestWithContext(
-		ctx,
-		http.MethodPut,
-		u.String(),
-		nil,
-	)
+	resp, err := c.Request(ctx, u, http.MethodPut)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("X-API-KEY", c.apiKey)
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
 			log.Println(err)
 		}
-	}()
+	}(resp.Body)
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -117,6 +105,13 @@ func (c *Client) AddRole(
 	case http.StatusNotFound:
 		return nil, fmt.Errorf("user not found")
 	default:
-		return nil, fmt.Errorf("backend returned status: %d, req body: %v, req url: %v", resp.StatusCode, req.Body, req.URL)
+		body, _ := io.ReadAll(resp.Body)
+		apiError := fmt.Errorf(
+			"backend returned status %d: %s",
+			resp.StatusCode,
+			strings.TrimSpace(string(body)))
+
+		log.Println(apiError)
+		return nil, apiError
 	}
 }
