@@ -38,12 +38,11 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 		return
 	}
 
-	content := fmt.Sprintf("Bebra")
+	content := "Bebra"
 
 	options := i.ApplicationCommandData().Options
 	if len(options) == 0 {
-		content = fmt.Sprintf("Не достатньо аргументів.")
-		return
+		content = "Не достатньо аргументів."
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -59,13 +58,23 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	var user *backend.User
 	user, err = client.FindUserByUsername(ctx, argument.Username)
 	if err != nil {
-		content = fmt.Sprintf("Не вдалося знайти користувача. %v", err)
+		content = fmt.Sprintf("Не вдалося знайти користувача. `%v`", err)
 
 	} else if contains(user.Roles, "PLAYER") {
 		content = fmt.Sprintf("%v вже має роль гравця", argument.Mention())
 	} else {
-
-		content = fmt.Sprintf("%v доданий до гравців", argument.Mention())
+		_, err = client.AddRole(ctx, user.ID, "PLAYER")
+		if err != nil {
+			content = fmt.Sprintf(
+				"Не вдалося додати роль гравця. `%v`",
+				err,
+			)
+		} else {
+			content = fmt.Sprintf(
+				"%v доданий до гравців",
+				argument.Mention(),
+			)
+		}
 	}
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
