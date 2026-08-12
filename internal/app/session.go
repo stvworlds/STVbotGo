@@ -1,10 +1,9 @@
 package app
 
 import (
-	"log"
-
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/handlers"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
