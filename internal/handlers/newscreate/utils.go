@@ -1,6 +1,7 @@
 package newscreate
 
 import (
+	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
 	"encoding/json"
 	"fmt"
@@ -12,7 +13,7 @@ import (
 )
 
 func extractNewsID(responseBody []byte) (string, error) {
-	var response createNewsResponse
+	var response backend.CreateNewsResponse
 	if err := json.Unmarshal(responseBody, &response); err != nil {
 		return "", fmt.Errorf("parse create news response: %w", err)
 	}

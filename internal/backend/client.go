@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"bytes"
 	"context"
 	"net/http"
 	"net/url"
@@ -24,8 +25,9 @@ func (c *Client) Request(
 	ctx context.Context,
 	u *url.URL,
 	method string,
+	body []byte,
 ) (resp *http.Response, err error) {
-	req, err := http.NewRequestWithContext(ctx, method, u.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, method, u.String(), bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}

@@ -37,7 +37,7 @@ func (c *Client) FindUserByUsername(
 	q.Set("username", username)
 	u.RawQuery = q.Encode()
 
-	resp, err := c.Request(ctx, u, http.MethodGet)
+	resp, err := c.Request(ctx, u, http.MethodGet, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (c *Client) AddRole(
 	q.Set("role", role)
 	u.RawQuery = q.Encode()
 
-	resp, err := c.Request(ctx, u, http.MethodPut)
+	resp, err := c.Request(ctx, u, http.MethodPut, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -1,12 +1,13 @@
 package newscreate
 
 import (
+	"STVbotGo/internal/backend"
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func buildNewsMessageComponents(news createNewsRequest, newsID string, newsURL string) []discordgo.MessageComponent {
+func buildNewsMessageComponents(news backend.CreateNewsRequest, newsID string, newsURL string) []discordgo.MessageComponent {
 	components := []discordgo.MessageComponent{
 		buildNewsHeaderSection(news),
 		discordgo.Separator{
@@ -42,7 +43,7 @@ func buildNewsMessageComponents(news createNewsRequest, newsID string, newsURL s
 	}
 }
 
-func buildNewsHeaderSection(news createNewsRequest) discordgo.MessageComponent {
+func buildNewsHeaderSection(news backend.CreateNewsRequest) discordgo.MessageComponent {
 	return discordgo.TextDisplay{
 		Content: fmt.Sprintf(
 			"## 📰 %s",
@@ -51,14 +52,14 @@ func buildNewsHeaderSection(news createNewsRequest) discordgo.MessageComponent {
 	}
 }
 
-func buildNewsDescription(news createNewsRequest) string {
+func buildNewsDescription(news backend.CreateNewsRequest) string {
 	return fmt.Sprintf(
 		"📝 Анонс \n%s",
 		news.Anons,
 	)
 }
 
-func buildNewsImage(news createNewsRequest) discordgo.MessageComponent {
+func buildNewsImage(news backend.CreateNewsRequest) discordgo.MessageComponent {
 	return discordgo.MediaGallery{
 		Items: []discordgo.MediaGalleryItem{
 			{
@@ -71,7 +72,7 @@ func buildNewsImage(news createNewsRequest) discordgo.MessageComponent {
 	}
 }
 
-func buildNewsPostData(news createNewsRequest, newsID string) string {
+func buildNewsPostData(news backend.CreateNewsRequest, newsID string) string {
 	return fmt.Sprintf(
 		"-# 👤 Автор <@%s> • 🆔 ID новини `%s`",
 		news.Author,
