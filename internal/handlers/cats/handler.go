@@ -1,11 +1,11 @@
 package cats
 
 import (
-	"encoding/json"
-	"io"
+	"STVbotGo/internal/backend"
+	"context"
 	"log"
-	"net/http"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -15,53 +15,40 @@ func showCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	catsName := []string{"котик", "котики", "кот", "коты", "кошка", "кошки", "кошечка", "кошечки"}
+	catsNames := map[string]struct{}{
+		"котик":   {},
+		"котики":  {},
+		"кот":     {},
+		"коты":    {},
+		"кошка":   {},
+		"кошки":   {},
+		"кошечка": {},
+		"кошечки": {},
+	}
 	content := strings.TrimSpace(strings.ToLower(m.Content))
-
-	found := false
-	for _, name := range catsName {
-		if content == name {
-			found = true
-			break
-		}
-	}
-	if !found {
+	if _, ok := catsNames[content]; ok {
 		return
 	}
 
-	resp, err := http.Get("https://api.thecatapi.com/v1/images/search")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	client := backend.NewClient(
+		"https://api.thecatapi.com",
+		"",
+	)
+
+	var cat string
+
+	cat, err := client.RandomCat(ctx)
+	if err != nil || cat == "" {
+		log.Println("Не вдалося отримати зображення кота:", err)
+		cat = "Не вдалося отримати зображення кота"
+	}
+
+	_, err = s.ChannelMessageSendReply(m.ChannelID, cat, m.Reference())
 	if err != nil {
-		log.Println("Ошибка запроса:", err)
-		return
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Println("Ошибка закрытия тела запроса:", err)
-		}
-	}(resp.Body)
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("Ошибка чтения тела:", err)
-		return
-	}
-
-	var catResp []CatResponse
-	if err := json.Unmarshal(body, &catResp); err != nil {
-		log.Println("Ошибка парсинга JSON:", err)
-		return
-	}
-
-	if len(catResp) == 0 {
-		return
-	}
-
-	catUrl := catResp[0].Url
-
-	_, err = s.ChannelMessageSendReply(m.ChannelID, catUrl, m.Reference())
-	if err != nil {
-		log.Println("Ошибка отправки сообщения:", err)
+		log.Println(err)
 		return
 	}
 }
