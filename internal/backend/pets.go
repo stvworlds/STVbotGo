@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -30,14 +31,19 @@ func (c *Client) RandomCat(ctx context.Context) (string, error) {
 		}
 	}(resp.Body)
 
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var cat CatResponse
-		if err := json.NewDecoder(resp.Body).Decode(&CatResponse{}); err != nil {
-			return cat.Url, err
-		}
-		return cat.Url, nil
-	default:
-		return "", nil
+	var cats []CatResponse
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&cats); err != nil {
+		return "", err
+	}
+
+	if len(cats) == 0 {
+		return "", fmt.Errorf("cat not found")
+	}
+
+	return cats[0].Url, nil
 }
