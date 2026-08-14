@@ -4,6 +4,7 @@ import (
 	"STVbotGo/internal/backend"
 	"context"
 	"log"
+	"slices"
 	"strings"
 	"time"
 
@@ -15,18 +16,13 @@ func showCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	catsNames := map[string]struct{}{
-		"котик":   {},
-		"котики":  {},
-		"кот":     {},
-		"коты":    {},
-		"кошка":   {},
-		"кошки":   {},
-		"кошечка": {},
-		"кошечки": {},
+	catsNames := []string{
+		"котик", "котики", "кот", "коты",
+		"кошка", "кошки", "кошечка", "кошечки",
 	}
 	content := strings.TrimSpace(strings.ToLower(m.Content))
-	if _, ok := catsNames[content]; ok {
+
+	if !slices.Contains(catsNames, content) {
 		return
 	}
 
