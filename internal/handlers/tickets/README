@@ -1,0 +1,4 @@
+Система тікетів: меню категорій, модалки, створення приватного каналу, кнопка закриття.
+Конфіг типів тікетів YAML (TicketsConfigPath).
+Адмін-команда `!tickets_resend_open_message` пересилає панель відкриття тікету.
+Підпакети: ticketsData, ticketsForms, ticketsInteraction, ticketsMessages, ticketsOpenLogic.

@@ -1,0 +1,3 @@
+Реєстр усіх Discord-хендлерів бота.
+RegisterAll - підписує event handlers.
+RegisterCommands - реєструє глобальні slash-команди (/ping, /convert, /create-news, /whitelist).
