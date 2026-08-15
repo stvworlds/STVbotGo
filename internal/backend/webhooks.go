@@ -12,7 +12,7 @@ import (
 type Webhook struct {
 	Username        *string          `json:"username,omitempty"`
 	AvatarUrl       *string          `json:"avatar_url,omitempty"`
-	Content         *string          `json:"content,omitempty"`
+	Content         string           `json:"content,omitempty"`
 	Embeds          *[]Embed         `json:"embeds,omitempty"`
 	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
 }
@@ -59,6 +59,48 @@ type AllowedMentions struct {
 	Users *[]string `json:"users,omitempty"`
 	Roles *[]string `json:"roles,omitempty"`
 }
+
+/*
+Example
+
+	# Simple Message
+
+	var url = "https://discord.com/api/webhooks/..."
+
+	message := backend.Webhook{
+		Username: new("BotUser"),
+		Content:  new("This is a test message"),
+	}
+
+	err := backend.SendWebhook(url, message)
+	if err != nil {
+		log.Printf("failed to send webhook: %v", err)
+	}
+
+	# Embed with image
+
+	var url = "https://discord.com/api/webhooks/..."
+	var image_url = "https://i.imgur.com/..."
+
+	image := backend.Image{
+		Url: &image_url,
+	}
+
+	embed := backend.Embed{
+		Image: &image,
+	}
+
+	message := backend.Webhook{
+		Username: new("BotUser"),
+		Content:  new("This is a test message"),
+		Embeds:   &[]backend.Embed{embed},
+	}
+
+	err := backend.SendWebhook(url, message)
+	if err != nil {
+		log.Printf("failed to send webhook: %v", err)
+	}
+*/
 
 func SendWebhook(url string, message Webhook) error {
 	payload := new(bytes.Buffer)
