@@ -74,7 +74,7 @@ Example
 
 	err := backend.SendWebhook(url, message)
 	if err != nil {
-		log.Printf("failed to send webhook: %v", err)
+		// handle error
 	}
 
 	# Embed with image
@@ -98,7 +98,7 @@ Example
 
 	err := backend.SendWebhook(url, message)
 	if err != nil {
-		log.Printf("failed to send webhook: %v", err)
+		// handle error
 	}
 */
 

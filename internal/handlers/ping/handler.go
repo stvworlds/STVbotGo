@@ -1,8 +1,8 @@
 package ping
 
 import (
+	"STVbotGo/internal/logger"
 	"fmt"
-	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -24,6 +24,6 @@ func commandPing(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		Data: &discordgo.InteractionResponseData{Content: content},
 	})
 	if err != nil {
-		log.Printf("failed to respond to /ping command: %v", err)
+		logger.WithError(err, "failed to respond to /ping command")
 	}
 }

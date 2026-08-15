@@ -1,11 +1,11 @@
 package backend
 
 import (
+	"STVbotGo/internal/logger"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -27,7 +27,7 @@ func (c *Client) RandomCat(ctx context.Context) (string, error) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Println(err)
+			logger.WithError(err, "close cat response body")
 		}
 	}(resp.Body)
 

@@ -1,7 +1,7 @@
 package newscreate
 
 import (
-	"log"
+	"STVbotGo/internal/logger"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -69,6 +69,6 @@ func handleCreateNewsCommand(s *discordgo.Session, i *discordgo.InteractionCreat
 		},
 	})
 	if err != nil {
-		log.Printf("failed to open /create-news modal: %v", err)
+		logger.WithError(err, "failed to open /create-news modal")
 	}
 }

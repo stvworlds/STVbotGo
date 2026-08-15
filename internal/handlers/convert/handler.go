@@ -1,9 +1,9 @@
 package convert
 
 import (
+	"STVbotGo/internal/logger"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -48,7 +48,7 @@ func commandConvert(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		},
 	})
 	if err != nil {
-		log.Printf("failed to defer /convert response: %v", err)
+		logger.WithError(err, "failed to defer /convert response")
 		return
 	}
 
@@ -58,14 +58,14 @@ func commandConvert(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	if err != nil {
-		log.Printf("failed to convert file to gif: %v", err)
+		logger.WithError(err, "failed to convert file to gif")
 		sendConvertFollowup(s, i, fmt.Sprintf("❌ Помилка конвертації: `%s`", err.Error()), nil)
 		return
 	}
 
 	file, err := os.Open(gifPath)
 	if err != nil {
-		log.Printf("failed to open gif file: %v", err)
+		logger.WithError(err, "failed to open gif file")
 		sendConvertFollowup(s, i, "❌ Не вдалося відкрити готовий GIF.", nil)
 		return
 	}
@@ -90,7 +90,7 @@ func convertAttachmentToGIF(attachment *discordgo.MessageAttachment) (string, fu
 
 	cleanup := func() {
 		if err := os.RemoveAll(tempDir); err != nil {
-			log.Printf("failed to cleanup temp dir: %v", err)
+			logger.WithError(err, "failed to cleanup temp dir")
 		}
 	}
 
@@ -168,7 +168,7 @@ func respondWithError(s *discordgo.Session, i *discordgo.InteractionCreate, mess
 		},
 	})
 	if err != nil {
-		log.Printf("failed to respond with error: %v", err)
+		logger.WithError(err, "failed to respond with error")
 	}
 }
 
@@ -182,6 +182,6 @@ func sendConvertFollowup(s *discordgo.Session, i *discordgo.InteractionCreate, c
 	}
 
 	if _, err := s.FollowupMessageCreate(i.Interaction, true, message); err != nil {
-		log.Printf("failed to send /convert followup: %v", err)
+		logger.WithError(err, "failed to send /convert followup")
 	}
 }

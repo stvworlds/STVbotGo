@@ -1,10 +1,10 @@
 package dog
 
 import (
+	"STVbotGo/internal/logger"
 	"encoding/json"
 
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/bwmarrin/discordgo"
@@ -26,7 +26,7 @@ func showDog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Printf("Error closing response body: %v", err)
+			logger.WithError(err, "Error closing response body")
 		}
 	}(resp.Body)
 
@@ -38,12 +38,12 @@ func showDog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var dogResp response
 	err = json.Unmarshal(body, &dogResp)
 	if err != nil {
-		log.Printf("Error unmarshaling JSON response: %v", err)
+		logger.WithError(err, "Error unmarshaling JSON response")
 		return
 	}
 
 	dogUrl := dogResp.Message
-	log.Printf(dogUrl)
+	logger.Debugf("dog image url: %s", dogUrl)
 
 	_, err = s.ChannelMessageSend(m.ChannelID, dogUrl)
 	if err != nil {

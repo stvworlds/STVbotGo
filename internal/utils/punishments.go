@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"log"
+	"STVbotGo/internal/logger"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -21,7 +22,7 @@ func UserBan(guildId string, userId string, s *discordgo.Session, time int, reas
 		discordgo.WithAuditLogReason(reason),
 	)
 	if err != nil {
-		log.Printf("Failed to ban `%v` for %v: %v", userId, reason, err)
+		logger.WithError(err, fmt.Sprintf("failed to ban `%v` for %v", userId, reason))
 		return err
 	}
 

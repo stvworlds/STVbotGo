@@ -1,8 +1,8 @@
 package readymessage
 
 import (
+	"STVbotGo/internal/logger"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -10,7 +10,7 @@ import (
 
 func (h *readyHandler) onReady(s *discordgo.Session, _ *discordgo.Ready) {
 	if h.startupChannelID == "" {
-		log.Println("startupChannelID is not configured, skipping startup message")
+		logger.Info("startupChannelID is not configured, skipping startup message")
 		return
 	}
 	startupDuration := time.Since(h.startedAt).Round(time.Millisecond)
@@ -21,6 +21,6 @@ func (h *readyHandler) onReady(s *discordgo.Session, _ *discordgo.Ready) {
 	)
 
 	if _, err := s.ChannelMessageSend(h.startupChannelID, message); err != nil {
-		log.Printf("failed to send startup message: %v", err)
+		logger.WithError(err, "failed to send startup message")
 	}
 }

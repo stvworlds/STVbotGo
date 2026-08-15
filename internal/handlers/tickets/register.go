@@ -4,7 +4,8 @@ import (
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/handlers/tickets/ticketsInteraction"
-	"log"
+	"STVbotGo/internal/logger"
+	"os"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -12,15 +13,16 @@ import (
 func Register(s *discordgo.Session, cfg config.Env) {
 	ticketsCfg, err := ticketsData.LoadTicketsConfig(cfg.TicketsConfigPath)
 	if err != nil {
-		log.Fatalf("failed to load tickets config: %v", err)
+		logger.Errorf("failed to load tickets config: %v", err)
+		os.Exit(1)
 	}
 	ticketsData.Config = ticketsCfg
-	log.Printf("Tickets config loaded: %d ticket types", len(ticketsCfg.Tickets))
+	logger.Infof("Tickets config loaded: %d ticket types", len(ticketsCfg.Tickets))
 
 	s.AddHandler(sendOpenTicketMessage)
 	s.AddHandler(ticketsInteraction.OpenTicketButton)
 	s.AddHandler(ticketsInteraction.TicketSelectMenu)
 	s.AddHandler(ticketsInteraction.HandleTicketFormSubmit)
 	s.AddHandler(ticketsInteraction.TicketControlButtons(cfg))
-	log.Println("Tickets are now loaded")
+	logger.Info("Tickets are now loaded")
 }

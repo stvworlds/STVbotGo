@@ -2,7 +2,7 @@ package tickets
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsMessages"
-	"log"
+	"STVbotGo/internal/logger"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -16,28 +16,28 @@ const (
 func sendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
-		// log.Println("Message sent by bot, ignoring.")
+		logger.Info("Message sent by bot, ignoring.")
 		return
 	}
 
 	if m.GuildID == "" {
-		// log.Println("Message sent in DM, ignoring.")
+		logger.Info("Message sent in DM, ignoring.")
 		return
 	}
 
 	permissions, err := s.UserChannelPermissions(m.Author.ID, m.ChannelID)
 	if err != nil {
-		// log.Println("Failed to get user permissions:", err)
+		logger.WithError(err, "Failed to get user permissions:")
 		return
 	}
 
 	if permissions&discordgo.PermissionAdministrator == 0 {
-		// log.Println("User does not have administrator permissions, ignoring.")
+		logger.Info("User does not have administrator permissions, ignoring.")
 		return
 	}
 
 	if strings.ToLower(m.Content) != "!tickets_resend_open_message" {
-		// log.Println("Invalid command, ignoring.")
+		logger.Info("Invalid command, ignoring.")
 		return
 	}
 
@@ -51,6 +51,6 @@ func sendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Flags:      messageFlagsIsComponentsV2,
 	})
 	if err != nil {
-		log.Println("Failed to send open ticket message:", err)
+		logger.WithError(err, "Failed to send open ticket message:")
 	}
 }

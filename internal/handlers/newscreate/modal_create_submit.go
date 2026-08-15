@@ -3,9 +3,9 @@ package newscreate
 import (
 	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
+	"STVbotGo/internal/logger"
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -74,7 +74,7 @@ func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionC
 
 	post, err = client.CreatePost(ctx, news)
 	if err != nil {
-		log.Printf("failed to create news: %v", err)
+		logger.WithError(err, "failed to create news")
 		respondEphemeral(s, i, fmt.Sprintf("❌ Не вдалося створити новину: %v", err))
 		return
 	}
@@ -89,7 +89,7 @@ func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionC
 		},
 	})
 	if err != nil {
-		log.Printf("failed to respond to create news modal: %v", err)
+		logger.WithError(err, "failed to respond to create news modal")
 	}
 
 	_, err = s.ChannelMessageSendComplex(cfg.UserNewsChannel, &discordgo.MessageSend{
@@ -97,7 +97,7 @@ func handleCreateNewsModalSubmit(s *discordgo.Session, i *discordgo.InteractionC
 		Flags:      messageFlagsIsComponentsV2,
 	})
 	if err != nil {
-		log.Printf("failed to send news created component to channel %s: %v", cfg.UserNewsChannel, err)
+		logger.WithError(err, fmt.Sprintf("failed to send news created component to channel %s", cfg.UserNewsChannel))
 		return
 	}
 }

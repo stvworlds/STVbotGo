@@ -3,9 +3,9 @@ package whitelist
 import (
 	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
+	"STVbotGo/internal/logger"
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -81,7 +81,7 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 		Data: &discordgo.InteractionResponseData{Content: content},
 	})
 	if err != nil {
-		log.Printf("failed to respond to /whitelist command: %v", err)
+		logger.WithError(err, "failed to respond to /whitelist command")
 	}
 }
 

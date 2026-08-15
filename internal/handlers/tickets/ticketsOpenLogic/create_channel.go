@@ -2,8 +2,8 @@ package ticketsOpenLogic
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
+	"STVbotGo/internal/logger"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -58,7 +58,7 @@ func CreateTicketChannel(s *discordgo.Session, data ticketsData.TicketChannelDat
 			Flags:      ticketsData.MessageFlagsIsComponentsV2,
 		},
 	); err != nil {
-		log.Printf("failed to send start message to ticket channel %s: %v", channel.ID, err)
+		logger.WithError(err, fmt.Sprintf("failed to send start message to ticket channel %s", channel.ID))
 	}
 
 	return channel, nil

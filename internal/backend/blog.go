@@ -1,11 +1,11 @@
 package backend
 
 import (
+	"STVbotGo/internal/logger"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -56,7 +56,7 @@ func (c *Client) CreatePost(
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.Println(err)
+			logger.WithError(err, "close blog response body")
 		}
 	}()
 

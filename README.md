@@ -30,6 +30,8 @@ Config is loaded from `./configs/` (local) or `/configs/` (Docker) as YAML, with
 - `TOKEN` — Discord bot token
 - `APP_ENV` — environment (`dev` / `main`)
 - `API_KEY` — external API key
+- `LOG_LEVEL` — logger min level (`debug` / `info` / `warn` / `error`; default `debug` in `dev`, else `info`)
+- `LOG_WEBHOOK_URL` — optional Discord webhook for remote application logs
 
 ## Project Structure
 
@@ -38,5 +40,6 @@ cmd/STVbotGo/          # entry point
 internal/
   app/                 # bot startup, session, signal handling
   config/              # config loading
+  logger/              # console + optional Discord webhook logger
   handlers/            # one package per feature module
 ```

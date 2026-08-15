@@ -3,7 +3,7 @@ package app
 import (
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/handlers"
-	"log"
+	"STVbotGo/internal/logger"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -22,6 +22,6 @@ func session(token string, cfg config.Env) (*discordgo.Session, error) {
 
 	handlers.RegisterAll(session, cfg)
 
-	log.Println("Bot is now running. Press CTRL-C to exit.")
+	logger.Info("Bot is now running. Press CTRL-C to exit.")
 	return session, nil
 }

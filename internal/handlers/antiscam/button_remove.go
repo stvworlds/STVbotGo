@@ -1,7 +1,8 @@
 package antiscam
 
 import (
-	"log"
+	"STVbotGo/internal/logger"
+	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -24,7 +25,7 @@ func removeBotton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	permissions, err := s.UserChannelPermissions(i.Member.User.ID, i.ChannelID)
 	if err != nil {
-		log.Printf("Failed to get permissions for user %s: %v", i.Member.User.ID, err)
+		logger.WithError(err, fmt.Sprintf("failed to get permissions for user %s", i.Member.User.ID))
 		respondEphemeral(s, i, "❌ Не вдалося перевірити ваші права.")
 		return
 	}
@@ -36,7 +37,7 @@ func removeBotton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	parts := strings.Split(data.CustomID, ".")
 	if len(parts) != 4 {
-		log.Printf("Invalid anti-scam CustomID: %q, parts count: %d", data.CustomID, len(parts))
+		logger.Warnf("Invalid anti-scam CustomID: %q, parts count: %d", data.CustomID, len(parts))
 		respondEphemeral(s, i, "❌ Некоректні дані кнопки.")
 		return
 	}
@@ -47,14 +48,14 @@ func removeBotton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	err = s.GuildBanDelete(i.GuildID, userID)
 	if err != nil {
-		log.Printf("Failed to unban user %s: %v", userID, err)
+		logger.WithError(err, fmt.Sprintf("failed to unban user %s", userID))
 		respondEphemeral(s, i, "❌ Не вдалося зняти блокування з користувача.")
 		return
 	}
 
 	user, err := s.User(userID)
 	if err != nil {
-		log.Printf("Failed to fetch user %s: %v", userID, err)
+		logger.WithError(err, fmt.Sprintf("failed to fetch user %s", userID))
 		respondEphemeral(s, i, "❌ Не вдалося отримати інформацію про користувача.")
 		return
 	}
@@ -69,7 +70,7 @@ func removeBotton(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		},
 	})
 	if err != nil {
-		log.Printf("Failed to update anti-scam message: %v", err)
+		logger.WithError(err, "failed to update anti-scam message")
 	}
 	respondEphemeral(s, i, user.Mention()+" розблоковано.")
 }
@@ -83,6 +84,6 @@ func respondEphemeral(s *discordgo.Session, i *discordgo.InteractionCreate, cont
 		},
 	})
 	if err != nil {
-		log.Printf("Failed to send interaction response: %v", err)
+		logger.WithError(err, "failed to send interaction response")
 	}
 }

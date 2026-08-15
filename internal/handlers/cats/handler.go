@@ -2,8 +2,8 @@ package cats
 
 import (
 	"STVbotGo/internal/backend"
+	"STVbotGo/internal/logger"
 	"context"
-	"log"
 	"slices"
 	"strings"
 	"time"
@@ -37,14 +37,17 @@ func showCat(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var cat string
 
 	cat, err := client.RandomCat(ctx)
-	if err != nil || cat == "" {
-		log.Println("Не вдалося отримати зображення кота:", err)
+	if err != nil {
+		logger.WithError(err, "Не вдалося отримати зображення кота")
+		cat = "Не вдалося отримати зображення кота"
+	} else if cat == "" {
+		logger.Warn("Не вдалося отримати зображення кота")
 		cat = "Не вдалося отримати зображення кота"
 	}
 
 	_, err = s.ChannelMessageSendReply(m.ChannelID, cat, m.Reference())
 	if err != nil {
-		log.Println(err)
+		logger.WithError(err, "failed to send cat image reply")
 		return
 	}
 }

@@ -3,9 +3,9 @@ package newscreate
 import (
 	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
+	"STVbotGo/internal/logger"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -33,7 +33,7 @@ func checkAccessRole(s *discordgo.Session, i *discordgo.InteractionCreate, cfg c
 	roleID := cfg.NewsRoleID
 	member, err := s.GuildMember(cfg.NewsGuildID, i.Member.User.ID)
 	if err != nil {
-		log.Printf("failed to fetch guild member: %v", err)
+		logger.WithError(err, "failed to fetch guild member")
 		return false
 	}
 
@@ -49,7 +49,7 @@ func checkAccessRole(s *discordgo.Session, i *discordgo.InteractionCreate, cfg c
 func checkUserHasTimeout(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) bool {
 	member, err := s.GuildMember(cfg.NewsGuildID, i.Member.User.ID)
 	if err != nil {
-		log.Printf("failed to fetch guild member: %v", err)
+		logger.WithError(err, "failed to fetch guild member")
 		return false
 	}
 	if member.CommunicationDisabledUntil != nil {
@@ -122,6 +122,6 @@ func respondEphemeral(s *discordgo.Session, i *discordgo.InteractionCreate, cont
 		},
 	})
 	if err != nil {
-		log.Printf("failed to send ephemeral response: %v", err)
+		logger.WithError(err, "failed to send ephemeral response")
 	}
 }

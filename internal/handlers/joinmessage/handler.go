@@ -1,7 +1,7 @@
 package joinmessage
 
 import (
-	"log"
+	"STVbotGo/internal/logger"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -13,7 +13,7 @@ func onMemberJoin(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
 func sendWelcomeDM(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
 	channel, err := s.UserChannelCreate(m.User.ID)
 	if err != nil {
-		log.Printf("Error creating DM channel: %v\n", err)
+		logger.WithError(err, "Error creating DM channel")
 		return
 	}
 
@@ -22,6 +22,6 @@ func sendWelcomeDM(s *discordgo.Session, m *discordgo.GuildMemberAdd) {
 		Flags:      messageFlagsIsComponentsV2,
 	})
 	if err != nil {
-		log.Printf("Error sending welcome DM: %v\n", err)
+		logger.WithError(err, "Error sending welcome DM")
 	}
 }

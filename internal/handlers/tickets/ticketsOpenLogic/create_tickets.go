@@ -2,8 +2,8 @@ package ticketsOpenLogic
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
+	"STVbotGo/internal/logger"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -26,7 +26,7 @@ func CreateTickets(s *discordgo.Session, i *discordgo.InteractionCreate, data Ti
 		Fields:  data.Fields,
 	})
 	if err != nil {
-		log.Printf("failed to create %s ticket channel: %v", data.Type, err)
+		logger.WithError(err, fmt.Sprintf("failed to create %s ticket channel", data.Type))
 		respondTicketCreateResult(s, i, "❌ Не вдалося створити канал заявки. Напишіть лист до <support@stvworlds.win>.")
 		return
 	}
@@ -43,7 +43,7 @@ func respondTicketCreateResult(s *discordgo.Session, i *discordgo.InteractionCre
 		},
 	})
 	if err != nil {
-		log.Printf("failed to send ticket create response: %v", err)
+		logger.WithError(err, "failed to send ticket create response")
 	}
 }
 
@@ -54,7 +54,7 @@ func logTicketCreateData(data TicketCreateData) {
 		fields = append(fields, fmt.Sprintf("%s=%q", key, value))
 	}
 
-	log.Printf(
+	logger.Infof(
 		"ticket created: type=%q userID=%q guildID=%q fields={%s}",
 		data.Type,
 		data.UserID,

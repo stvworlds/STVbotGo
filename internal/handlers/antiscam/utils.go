@@ -1,7 +1,8 @@
 package antiscam
 
 import (
-	"log"
+	"STVbotGo/internal/logger"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,14 +20,14 @@ func sendAdminMessage(s *discordgo.Session, m *discordgo.MessageCreate, channel 
 		Flags:      messageFlagsIsComponentsV2,
 	})
 	if err != nil {
-		log.Println("Failed to send admin message:", err)
+		logger.WithError(err, "failed to send admin message")
 	}
 }
 
 func sendUserMessageDM(s *discordgo.Session, m *discordgo.MessageCreate, u *discordgo.User, url string) (*discordgo.Message, error) {
 	channel, err := s.UserChannelCreate(u.ID)
 	if err != nil {
-		log.Printf("Failed to create DM channel for user %s: %v", u.ID, err)
+		logger.WithError(err, fmt.Sprintf("failed to create DM channel for user %s", u.ID))
 		return nil, err
 	}
 
@@ -35,7 +36,7 @@ func sendUserMessageDM(s *discordgo.Session, m *discordgo.MessageCreate, u *disc
 		Flags:      messageFlagsIsComponentsV2,
 	})
 	if err != nil {
-		log.Printf("Error sending DM: %v\n", err)
+		logger.WithError(err, "error sending DM")
 		return nil, err
 	}
 

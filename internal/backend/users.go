@@ -1,11 +1,11 @@
 package backend
 
 import (
+	"STVbotGo/internal/logger"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -44,7 +44,7 @@ func (c *Client) FindUserByUsername(
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Println(err)
+			logger.WithError(err, "close user find response body")
 		}
 	}(resp.Body)
 
@@ -64,7 +64,7 @@ func (c *Client) FindUserByUsername(
 			resp.StatusCode,
 			strings.TrimSpace(string(body)))
 
-		log.Println(apiError)
+		logger.WithError(apiError, "user request failed")
 		return nil, apiError
 	}
 }
@@ -91,7 +91,7 @@ func (c *Client) AddRole(
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Println(err)
+			logger.WithError(err, "close user roles response body")
 		}
 	}(resp.Body)
 
@@ -111,7 +111,7 @@ func (c *Client) AddRole(
 			resp.StatusCode,
 			strings.TrimSpace(string(body)))
 
-		log.Println(apiError)
+		logger.WithError(apiError, "add role request failed")
 		return nil, apiError
 	}
 }

@@ -2,8 +2,8 @@ package ticketsInteraction
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
+	"STVbotGo/internal/logger"
 	"fmt"
-	"log"
 
 	"STVbotGo/internal/config"
 
@@ -46,7 +46,7 @@ func handleTicketClose(s *discordgo.Session, i *discordgo.InteractionCreate, cfg
 	respondTicketControl(s, i, fmt.Sprintf("🔒 Заявку закрив %s.", ticketActorMention(i)), false)
 
 	if _, err := s.ChannelDelete(i.ChannelID); err != nil {
-		log.Printf("failed to close ticket channel %s: %v", i.ChannelID, err)
+		logger.WithError(err, fmt.Sprintf("failed to close ticket channel %s", i.ChannelID))
 	}
 }
 
@@ -107,6 +107,6 @@ func respondTicketControl(s *discordgo.Session, i *discordgo.InteractionCreate, 
 			Flags:   flags,
 		},
 	}); err != nil {
-		log.Printf("failed to respond ticket control interaction: %v", err)
+		logger.WithError(err, "failed to respond ticket control interaction")
 	}
 }

@@ -3,7 +3,7 @@ package ticketsInteraction
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/handlers/tickets/ticketsMessages"
-	"log"
+	"STVbotGo/internal/logger"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -41,7 +41,7 @@ func TicketSelectMenu(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		Flags:      ticketsData.MessageFlagsIsComponentsV2 | discordgo.MessageFlagsEphemeral,
 	})
 	if err != nil {
-		log.Printf("Error responding to select menu interaction: %v", err)
+		logger.WithError(err, "Error responding to select menu interaction")
 		return
 	}
 }
@@ -55,6 +55,6 @@ func resendMessage(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		},
 	})
 	if err != nil {
-		log.Printf("Error updating select menu interaction message: %v", err)
+		logger.WithError(err, "Error updating select menu interaction message")
 	}
 }

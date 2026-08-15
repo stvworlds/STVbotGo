@@ -2,7 +2,8 @@ package ticketsForms
 
 import (
 	"STVbotGo/internal/handlers/tickets/ticketsData"
-	"log"
+	"STVbotGo/internal/logger"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -32,13 +33,13 @@ func IsKnownForm(ticketType ticketsData.TicketType) bool {
 
 func OpenTicketForm(s *discordgo.Session, i *discordgo.InteractionCreate, ticketType ticketsData.TicketType) {
 	if ticketsData.Config == nil {
-		log.Printf("tickets config not loaded")
+		logger.Info("tickets config not loaded")
 		return
 	}
 
 	cfg, ok := ticketsData.Config.Resolve(ticketType)
 	if !ok {
-		log.Printf("unknown ticket form type: %s", ticketType)
+		logger.Infof("unknown ticket form type: %s", ticketType)
 		return
 	}
 
@@ -51,6 +52,6 @@ func OpenTicketForm(s *discordgo.Session, i *discordgo.InteractionCreate, ticket
 		},
 	})
 	if err != nil {
-		log.Printf("failed to open %s ticket modal: %v", ticketType, err)
+		logger.WithError(err, fmt.Sprintf("failed to open %s ticket modal", ticketType))
 	}
 }
