@@ -4,6 +4,7 @@ import (
 	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
 	"STVbotGo/internal/logger"
+	"STVbotGo/internal/utils"
 	"context"
 	"fmt"
 	"time"
@@ -60,7 +61,7 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	if err != nil {
 		content = fmt.Sprintf("Не вдалося знайти користувача. `%v`", err)
 
-	} else if contains(user.Roles, "PLAYER") {
+	} else if utils.Contains(user.Roles, "PLAYER") {
 		content = fmt.Sprintf("%v вже має роль гравця", argument.Mention())
 	} else {
 		_, err = client.AddRole(ctx, user.ID, "PLAYER")
@@ -83,13 +84,4 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate, cfg co
 	if err != nil {
 		logger.WithError(err, "failed to respond to /whitelist command")
 	}
-}
-
-func contains[T comparable](slice []T, value T) bool {
-	for _, item := range slice {
-		if item == value {
-			return true
-		}
-	}
-	return false
 }
