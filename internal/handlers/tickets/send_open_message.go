@@ -16,12 +16,12 @@ const (
 func sendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Author.ID == s.State.User.ID {
-		logger.Info("Message sent by bot, ignoring.")
+		logger.Debug("Message sent by bot, ignoring.")
 		return
 	}
 
 	if m.GuildID == "" {
-		logger.Info("Message sent in DM, ignoring.")
+		logger.Debug("Message sent in DM, ignoring.")
 		return
 	}
 
@@ -32,12 +32,12 @@ func sendOpenTicketMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if permissions&discordgo.PermissionAdministrator == 0 {
-		logger.Info("User does not have administrator permissions, ignoring.")
+		logger.Debug("User does not have administrator permissions, ignoring.")
 		return
 	}
 
 	if strings.ToLower(m.Content) != "!tickets_resend_open_message" {
-		logger.Info("Invalid command, ignoring.")
+		logger.Debug("Invalid command, ignoring.")
 		return
 	}
 

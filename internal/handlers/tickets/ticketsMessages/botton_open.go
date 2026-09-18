@@ -25,16 +25,15 @@ func OpenBottonComponents(mtype string) []discordgo.MessageComponent {
 				discordgo.TextDisplay{
 					Content: title,
 				},
-
-				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						discordgo.Button{
-							Label:    "Відкрити",
-							Style:    discordgo.SuccessButton,
-							Disabled: false,
-							CustomID: ticketsForms.ButtonID(ticketType),
-						},
-					},
+			},
+		},
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Відкрити",
+					Style:    discordgo.SuccessButton,
+					Disabled: false,
+					CustomID: ticketsForms.ButtonID(ticketType),
 				},
 			},
 		},

@@ -3,6 +3,7 @@ package sync
 import (
 	"STVbotGo/internal/backend"
 	"STVbotGo/internal/config"
+	"STVbotGo/internal/handlers/tickets/ticketsData"
 	"STVbotGo/internal/logger"
 	"STVbotGo/internal/utils"
 	"context"
@@ -12,7 +13,18 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func onBottonClick(s *discordgo.Session) {
+func onButtonClick(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) {
+	if i.Type != discordgo.InteractionMessageComponent {
+		return
+	}
+
+	data := i.MessageComponentData()
+
+	switch data.CustomID {
+	case ticketsData.TicketCloseButtonID:
+	case ButtonSyncID:
+		handleSyncButton(s, i, cfg)
+	}
 
 }
 
@@ -47,7 +59,44 @@ func syncUser(s *discordgo.Session, user *discordgo.User, guildID string, cfg co
 			return fmt.Errorf("%v", err)
 		}
 		content = fmt.Sprintf("%v вже має роль гравця", user.Mention())
+	} else {
+		err = fmt.Errorf("користувач не має ролі PLAYER на сайті")
+		content = err.Error()
 	}
 	logger.Debug(content)
-	return fmt.Errorf("%v", err)
+	return err
+}
+
+func handleSyncButton(s *discordgo.Session, i *discordgo.InteractionCreate, cfg config.Env) {
+	if i.GuildID != "1335083670364618772" {
+		return
+	}
+	content := "Unknown error"
+
+	err := syncUser(s, i.User, i.GuildID, cfg)
+	if err != nil {
+		content = fmt.Sprintf("Не вдалося синхронізувати користувача. `%v`", err)
+		respondMessage(s, i, content, true)
+		return
+	}
+
+	content = "Успішна синхронізація"
+	respondMessage(s, i, content, true)
+}
+
+func respondMessage(s *discordgo.Session, i *discordgo.InteractionCreate, content string, ephemeral bool) {
+	flags := discordgo.MessageFlags(0)
+	if ephemeral {
+		flags = discordgo.MessageFlagsEphemeral
+	}
+
+	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: content,
+			Flags:   flags,
+		},
+	}); err != nil {
+		logger.WithError(err, "failed to respond sync interaction")
+	}
 }
