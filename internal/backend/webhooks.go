@@ -128,7 +128,7 @@ func SendWebhook(url string, message Webhook) error {
 			return err
 		}
 
-		return fmt.Errorf(string(responseBody))
+		return fmt.Errorf("%s", string(responseBody))
 	}
 
 	return nil

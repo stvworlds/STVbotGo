@@ -98,7 +98,6 @@ func defaultConfig() Config {
 // replaces config and (re)starts the webhook worker if needed.
 func Init(c Config) {
 	mu.Lock()
-	defer mu.Unlock()
 
 	if c.Username == "" {
 		c.Username = "STVbot log"
@@ -113,6 +112,7 @@ func Init(c Config) {
 	cfg = c
 
 	if cfg.WebhookURL == "" {
+		mu.Unlock()
 		return
 	}
 
@@ -122,6 +122,9 @@ func Init(c Config) {
 		go webhookWorker()
 		started = true
 	}
+	mu.Unlock()
+
+	Info("logger initialized")
 }
 
 // Close flushes pending webhook logs and stops the worker.

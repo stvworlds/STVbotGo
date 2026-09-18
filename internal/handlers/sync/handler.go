@@ -28,7 +28,20 @@ func onButtonClick(s *discordgo.Session, i *discordgo.InteractionCreate, cfg con
 
 }
 
+func extractUser(i *discordgo.InteractionCreate) *discordgo.User {
+	if i == nil {
+		return nil
+	}
+	if i.Member != nil && i.Member.User != nil {
+		return i.Member.User
+	}
+	return i.User
+}
+
 func onUserJoin(s *discordgo.Session, e *discordgo.GuildMemberAdd, cfg config.Env) {
+	if e == nil || e.Member == nil || e.Member.User == nil {
+		return
+	}
 	if e.GuildID != "1335083670364618772" {
 		return
 	}
@@ -39,6 +52,10 @@ func onUserJoin(s *discordgo.Session, e *discordgo.GuildMemberAdd, cfg config.En
 }
 
 func syncUser(s *discordgo.Session, user *discordgo.User, guildID string, cfg config.Env) (err error) {
+	if user == nil {
+		return fmt.Errorf("користувач не вказаний")
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	content := "Виникла не відома помилка"
@@ -53,7 +70,7 @@ func syncUser(s *discordgo.Session, user *discordgo.User, guildID string, cfg co
 	if err != nil {
 		content = fmt.Sprintf("Не вдалося знайти користувача. `%v`", err)
 
-	} else if utils.Contains(player.Roles, "PLAYER") {
+	} else if player != nil && utils.Contains(player.Roles, "PLAYER") {
 		err = s.GuildMemberRoleAdd(guildID, user.ID, "1402775011814539375")
 		if err != nil {
 			return fmt.Errorf("%v", err)
@@ -71,16 +88,22 @@ func handleSyncButton(s *discordgo.Session, i *discordgo.InteractionCreate, cfg 
 	if i.GuildID != "1335083670364618772" {
 		return
 	}
-	content := "Unknown error"
 
-	err := syncUser(s, i.User, i.GuildID, cfg)
+	user := extractUser(i)
+	if user == nil {
+		logger.Error("failed to get user from sync interaction")
+		respondMessage(s, i, "Не вдалося визначити користувача.", true)
+		return
+	}
+
+	err := syncUser(s, user, i.GuildID, cfg)
 	if err != nil {
-		content = fmt.Sprintf("Не вдалося синхронізувати користувача. `%v`", err)
+		content := fmt.Sprintf("Не вдалося синхронізувати користувача. `%v`", err)
 		respondMessage(s, i, content, true)
 		return
 	}
 
-	content = "Успішна синхронізація"
+	content := "Успішна синхронізація"
 	respondMessage(s, i, content, true)
 }
 

@@ -56,4 +56,5 @@ jobs:
             -e APP_CONFIG=dev \
             -e TOKEN="${{ secrets.DEV_TOKEN }}" \
             -e API_KEY="${{ secrets.API_KEY }}" \
+            -e LOG_WEBHOOK_URL="${{ secrets.LOG_WEBHOOK_URL }}" \
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
