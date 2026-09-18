@@ -9,6 +9,21 @@ import (
 
 func sendSyncMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
+	if m.Author == nil {
+		logger.Debug("Message author is nil, ignoring.")
+		return
+	}
+
+	if s.State == nil || s.State.User == nil {
+		logger.Debug("Bot state user is nil, ignoring.")
+		return
+	}
+
+	if m.Author.Bot {
+		logger.Debug("Message sent by bot, ignoring.")
+		return
+	}
+
 	if m.Author.ID == s.State.User.ID {
 		logger.Debug("Message sent by bot, ignoring.")
 		return
