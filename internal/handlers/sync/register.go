@@ -8,7 +8,7 @@ import (
 
 const (
 	ButtonSyncID                                      = "sync_botton"
-	channel                                           = "1441126594080018613"
+	channel                                           = "1548851761127620748"
 	messageFlagsIsComponentsV2 discordgo.MessageFlags = 1 << 15
 )
 
