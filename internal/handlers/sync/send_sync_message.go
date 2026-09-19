@@ -45,7 +45,7 @@ func sendSyncMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if strings.ToLower(m.Content) != ",hresend_sync_message" {
+	if strings.ToLower(m.Content) != "!resend_sync_message" {
 		logger.Debug("Invalid command, ignoring.")
 		return
 	}
